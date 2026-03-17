@@ -5,6 +5,16 @@ import ArticleCard from '../../components/ArticleCard.astro';
 
 const allPosts = (await getCollection('blog', ({ data }) => !data.draft))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+/** Extraer todos los tags únicos */
+const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))].sort();
+
+const categoryLabels: Record<string, string> = {
+  inversion: 'Inversión',
+  ahorro: 'Ahorro',
+  cripto: 'Criptomonedas',
+  fiscalidad: 'Fiscalidad',
+};
 ---
 
 <BaseLayout
@@ -15,23 +25,323 @@ const allPosts = (await getCollection('blog', ({ data }) => !data.draft))
   }}
 >
   <section class="max-w-6xl mx-auto px-4 py-12 md:py-16">
-    <header class="mb-12 animate-fade-up">
+    <!-- Cabecera -->
+    <header class="mb-10 animate-fade-up">
       <h1 class="font-display text-4xl md:text-5xl font-bold mb-4">Blog</h1>
       <p class="text-lg text-texto/60 max-w-2xl">
         Todos nuestros artículos sobre inversión, ahorro, criptomonedas y fiscalidad.
       </p>
     </header>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 reveal-stagger">
+    <!-- Barra de búsqueda y controles -->
+    <div class="mb-10 space-y-5 animate-fade-up" style="animation-delay: 0.1s">
+      <!-- Buscador -->
+      <div class="relative">
+        <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-texto/30 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+        <input
+          id="search-input"
+          type="text"
+          placeholder="Buscar artículos..."
+          class="w-full pl-12 pr-4 py-3.5 rounded-xl bg-white border border-texto/10 text-texto placeholder-texto/35 focus:outline-none focus:border-verde/40 focus:ring-2 focus:ring-verde/10 transition-all"
+          aria-label="Buscar artículos"
+        />
+      </div>
+
+      <!-- Filtros y ordenación -->
+      <div class="flex flex-col md:flex-row md:items-start gap-4">
+        <!-- Filtro por categoría -->
+        <div class="flex-1">
+          <p class="text-xs font-semibold uppercase tracking-wider text-texto/40 mb-2.5">Categoría</p>
+          <div id="category-filters" class="flex flex-wrap gap-2">
+            <button
+              data-category="all"
+              class="filter-btn active px-4 py-2 text-sm font-medium rounded-lg border transition-all"
+            >
+              Todas
+            </button>
+            {Object.entries(categoryLabels).map(([value, label]) => (
+              <button
+                data-category={value}
+                class="filter-btn px-4 py-2 text-sm font-medium rounded-lg border transition-all"
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <!-- Ordenación -->
+        <div class="shrink-0">
+          <p class="text-xs font-semibold uppercase tracking-wider text-texto/40 mb-2.5">Ordenar por</p>
+          <div id="sort-controls" class="flex gap-2">
+            <button
+              data-sort="newest"
+              class="sort-btn active px-4 py-2 text-sm font-medium rounded-lg border transition-all flex items-center gap-1.5"
+            >
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
+              </svg>
+              Más recientes
+            </button>
+            <button
+              data-sort="oldest"
+              class="sort-btn px-4 py-2 text-sm font-medium rounded-lg border transition-all flex items-center gap-1.5"
+            >
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h9m5-4v12m0 0l-4-4m4 4l4-4" />
+              </svg>
+              Más antiguos
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filtro por tags -->
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-wider text-texto/40 mb-2.5">Etiquetas</p>
+        <div id="tag-filters" class="flex flex-wrap gap-2">
+          <button data-tag="all" class="tag-btn active px-3 py-1.5 text-xs font-medium rounded-lg border transition-all">
+            Todas
+          </button>
+          {allTags.map((tag) => (
+            <button
+              data-tag={tag}
+              class="tag-btn px-3 py-1.5 text-xs font-medium rounded-lg border transition-all"
+            >
+              #{tag}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <!-- Contador de resultados -->
+    <div class="mb-6 flex items-center justify-between">
+      <p id="results-count" class="text-sm text-texto/45">
+        <span id="count-number">{allPosts.length}</span> artículos
+      </p>
+      <button
+        id="clear-filters"
+        class="hidden text-sm text-verde font-medium hover:underline underline-offset-4 flex items-center gap-1"
+      >
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+        Limpiar filtros
+      </button>
+    </div>
+
+    <!-- Grid de artículos -->
+    <div id="articles-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       {allPosts.map((post) => (
-        <div class="reveal">
+        <div
+          class="article-item"
+          data-title={post.data.title.toLowerCase()}
+          data-description={post.data.description.toLowerCase()}
+          data-category={post.data.category}
+          data-tags={post.data.tags.join(',')}
+          data-date={post.data.pubDate.toISOString()}
+        >
           <ArticleCard post={post} />
         </div>
       ))}
     </div>
 
-    {allPosts.length === 0 && (
-      <p class="text-center text-texto/50 py-20">No hay artículos publicados todavía.</p>
-    )}
+    <!-- Mensaje sin resultados -->
+    <div id="no-results" class="hidden text-center py-20">
+      <svg class="w-16 h-16 mx-auto text-texto/15 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <p class="text-texto/40 text-lg font-medium mb-1">No se encontraron artículos</p>
+      <p class="text-texto/30 text-sm">Prueba con otros términos o filtros</p>
+    </div>
   </section>
 </BaseLayout>
+
+<style>
+  /* Estados de los botones de filtro */
+  .filter-btn {
+    border-color: rgba(26, 26, 26, 0.1);
+    color: rgba(26, 26, 26, 0.55);
+    background: white;
+  }
+  .filter-btn:hover {
+    border-color: rgba(27, 107, 58, 0.3);
+    color: rgba(26, 26, 26, 0.8);
+  }
+  .filter-btn.active {
+    border-color: #1B6B3A;
+    background: rgba(27, 107, 58, 0.06);
+    color: #1B6B3A;
+  }
+
+  .sort-btn {
+    border-color: rgba(26, 26, 26, 0.1);
+    color: rgba(26, 26, 26, 0.55);
+    background: white;
+  }
+  .sort-btn:hover {
+    border-color: rgba(26, 26, 26, 0.2);
+    color: rgba(26, 26, 26, 0.8);
+  }
+  .sort-btn.active {
+    border-color: #1B6B3A;
+    background: rgba(27, 107, 58, 0.06);
+    color: #1B6B3A;
+  }
+
+  .tag-btn {
+    border-color: rgba(26, 26, 26, 0.08);
+    color: rgba(26, 26, 26, 0.45);
+    background: white;
+  }
+  .tag-btn:hover {
+    border-color: rgba(201, 150, 62, 0.3);
+    color: rgba(26, 26, 26, 0.7);
+  }
+  .tag-btn.active {
+    border-color: #C9963E;
+    background: rgba(201, 150, 62, 0.06);
+    color: #C9963E;
+  }
+
+  /* Animación de aparición/desaparición de tarjetas */
+  .article-item {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+  .article-item.hidden-item {
+    display: none;
+  }
+</style>
+
+<script>
+  const searchInput = document.getElementById('search-input') as HTMLInputElement;
+  const grid = document.getElementById('articles-grid') as HTMLElement;
+  const items = Array.from(grid.querySelectorAll('.article-item')) as HTMLElement[];
+  const countEl = document.getElementById('count-number') as HTMLElement;
+  const noResults = document.getElementById('no-results') as HTMLElement;
+  const clearBtn = document.getElementById('clear-filters') as HTMLElement;
+
+  let activeCategory = 'all';
+  let activeTag = 'all';
+  let activeSort = 'newest';
+  let searchQuery = '';
+
+  /** Filtra y ordena los artículos */
+  function updateView() {
+    const query = searchQuery.toLowerCase().trim();
+
+    // Filtrar
+    let visible = 0;
+    items.forEach((item) => {
+      const title = item.dataset.title ?? '';
+      const desc = item.dataset.description ?? '';
+      const category = item.dataset.category ?? '';
+      const tags = item.dataset.tags ?? '';
+
+      const matchSearch = !query || title.includes(query) || desc.includes(query);
+      const matchCategory = activeCategory === 'all' || category === activeCategory;
+      const matchTag = activeTag === 'all' || tags.split(',').includes(activeTag);
+
+      if (matchSearch && matchCategory && matchTag) {
+        item.classList.remove('hidden-item');
+        visible++;
+      } else {
+        item.classList.add('hidden-item');
+      }
+    });
+
+    // Ordenar
+    const sorted = items
+      .filter((i) => !i.classList.contains('hidden-item'))
+      .sort((a, b) => {
+        const dateA = new Date(a.dataset.date ?? '').getTime();
+        const dateB = new Date(b.dataset.date ?? '').getTime();
+        return activeSort === 'newest' ? dateB - dateA : dateA - dateB;
+      });
+
+    // Reordenar en el DOM
+    sorted.forEach((item) => grid.appendChild(item));
+    // Mover los ocultos al final
+    items.filter((i) => i.classList.contains('hidden-item')).forEach((item) => grid.appendChild(item));
+
+    // Actualizar contador
+    countEl.textContent = String(visible);
+    noResults.classList.toggle('hidden', visible > 0);
+    grid.classList.toggle('hidden', visible === 0);
+
+    // Mostrar/ocultar botón limpiar
+    const hasFilters = activeCategory !== 'all' || activeTag !== 'all' || query !== '';
+    clearBtn.classList.toggle('hidden', !hasFilters);
+  }
+
+  // Búsqueda con debounce
+  let debounceTimer: ReturnType<typeof setTimeout>;
+  searchInput.addEventListener('input', () => {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+      searchQuery = searchInput.value;
+      updateView();
+    }, 200);
+  });
+
+  // Filtros de categoría
+  document.querySelectorAll('.filter-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach((b) => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeCategory = (btn as HTMLElement).dataset.category ?? 'all';
+      updateView();
+    });
+  });
+
+  // Filtros de tags
+  document.querySelectorAll('.tag-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tag-btn').forEach((b) => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeTag = (btn as HTMLElement).dataset.tag ?? 'all';
+      updateView();
+    });
+  });
+
+  // Ordenación
+  document.querySelectorAll('.sort-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.sort-btn').forEach((b) => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeSort = (btn as HTMLElement).dataset.sort ?? 'newest';
+      updateView();
+    });
+  });
+
+  // Limpiar filtros
+  clearBtn.addEventListener('click', () => {
+    searchInput.value = '';
+    searchQuery = '';
+    activeCategory = 'all';
+    activeTag = 'all';
+
+    document.querySelectorAll('.filter-btn').forEach((b) => b.classList.remove('active'));
+    document.querySelector('.filter-btn[data-category="all"]')?.classList.add('active');
+    document.querySelectorAll('.tag-btn').forEach((b) => b.classList.remove('active'));
+    document.querySelector('.tag-btn[data-tag="all"]')?.classList.add('active');
+
+    updateView();
+  });
+
+  // Leer parámetros de URL al cargar (para links desde homepage)
+  const params = new URLSearchParams(window.location.search);
+  const catParam = params.get('categoria');
+  if (catParam) {
+    const catBtn = document.querySelector(`.filter-btn[data-category="${catParam}"]`);
+    if (catBtn) {
+      document.querySelectorAll('.filter-btn').forEach((b) => b.classList.remove('active'));
+      catBtn.classList.add('active');
+      activeCategory = catParam;
+      updateView();
+    }
+  }
+</script>
