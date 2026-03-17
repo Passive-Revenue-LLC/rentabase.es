@@ -1,0 +1,46 @@
+---
+/** Pie de página del sitio */
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="bg-texto text-white/70 mt-20">
+  <div class="max-w-6xl mx-auto px-4 py-12">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <!-- Sobre el blog -->
+      <div>
+        <span class="font-display text-xl font-bold text-white">
+          Renta<span class="text-verde">Base</span>
+        </span>
+        <p class="mt-3 text-sm leading-relaxed">
+          Blog sobre inversión, ahorro, criptomonedas y fiscalidad en España. Información
+          clara y práctica para tomar mejores decisiones financieras.
+        </p>
+      </div>
+
+      <!-- Navegación -->
+      <div>
+        <h3 class="text-sm font-semibold text-white uppercase tracking-wider mb-3">Navegación</h3>
+        <ul class="space-y-2 text-sm">
+          <li><a href="/" class="hover:text-white transition-colors">Inicio</a></li>
+          <li><a href="/blog" class="hover:text-white transition-colors">Blog</a></li>
+          <li><a href="/sobre-nosotros" class="hover:text-white transition-colors">Sobre nosotros</a></li>
+        </ul>
+      </div>
+
+      <!-- Legal -->
+      <div>
+        <h3 class="text-sm font-semibold text-white uppercase tracking-wider mb-3">Legal</h3>
+        <ul class="space-y-2 text-sm">
+          <li><a href="/politica-de-privacidad" class="hover:text-white transition-colors">Política de privacidad</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-10 pt-6 border-t border-white/10 text-center text-sm">
+      <p>&copy; {currentYear} RentaBase. Todos los derechos reservados.</p>
+      <p class="mt-1 text-white/40">
+        La información publicada no constituye asesoramiento financiero profesional.
+      </p>
+    </div>
+  </div>
+</footer>

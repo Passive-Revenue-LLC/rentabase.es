@@ -1,0 +1,55 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import CategoryBadge from './CategoryBadge.astro';
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+}
+
+const { post } = Astro.props;
+const { title, description, pubDate, category, image } = post.data;
+
+/** Calcula el tiempo de lectura estimado */
+const words = post.body.split(/\s+/).length;
+const readingTime = Math.max(1, Math.ceil(words / 200));
+
+const formattedDate = pubDate.toLocaleDateString('es-ES', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+});
+---
+
+<article class="group">
+  <a href={`/blog/${post.slug}`} class="block">
+    <!-- Imagen opcional -->
+    {image && (
+      <div class="aspect-video rounded-lg overflow-hidden mb-4 bg-texto/5">
+        <img
+          src={image}
+          alt={title}
+          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          loading="lazy"
+        />
+      </div>
+    )}
+
+    <!-- Contenido -->
+    <div>
+      <div class="flex items-center gap-3 mb-2">
+        <CategoryBadge category={category} />
+        <span class="text-xs text-texto/50">{formattedDate}</span>
+        <span class="text-xs text-texto/50">·</span>
+        <span class="text-xs text-texto/50">{readingTime} min</span>
+      </div>
+
+      <h3 class="font-display text-xl font-bold leading-snug mb-2 group-hover:text-verde transition-colors">
+        {title}
+      </h3>
+
+      <p class="text-sm text-texto/65 leading-relaxed line-clamp-2">
+        {description}
+      </p>
+    </div>
+  </a>
+</article>

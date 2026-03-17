@@ -1,0 +1,107 @@
+/** Utilidades SEO para generar meta tags */
+
+export interface SEOProps {
+  title: string;
+  description: string;
+  image?: string;
+  url?: string;
+  type?: 'website' | 'article';
+  publishedDate?: string;
+  modifiedDate?: string;
+}
+
+export interface SEOMeta {
+  title: string;
+  description: string;
+  canonical: string;
+  openGraph: {
+    title: string;
+    description: string;
+    image: string;
+    url: string;
+    type: string;
+  };
+  twitter: {
+    card: string;
+    title: string;
+    description: string;
+    image: string;
+  };
+}
+
+const SITE_URL = 'https://rentabase.es';
+const DEFAULT_IMAGE = '/og-default.jpg';
+const SITE_NAME = 'RentaBase';
+
+/** Genera todos los meta tags SEO necesarios */
+export function generateSEO({
+  title,
+  description,
+  image,
+  url = '',
+  type = 'website',
+}: SEOProps): SEOMeta {
+  const fullTitle = title === SITE_NAME ? title : `${title} | ${SITE_NAME}`;
+  const canonicalURL = new URL(url, SITE_URL).href;
+  const ogImage = image ? new URL(image, SITE_URL).href : new URL(DEFAULT_IMAGE, SITE_URL).href;
+
+  return {
+    title: fullTitle,
+    description,
+    canonical: canonicalURL,
+    openGraph: {
+      title: fullTitle,
+      description,
+      image: ogImage,
+      url: canonicalURL,
+      type,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: fullTitle,
+      description,
+      image: ogImage,
+    },
+  };
+}
+
+/** Genera JSON-LD para un artículo */
+export function generateArticleJsonLd({
+  title,
+  description,
+  image,
+  url,
+  publishedDate,
+  modifiedDate,
+}: SEOProps) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: title,
+    description,
+    image: image ? new URL(image, SITE_URL).href : undefined,
+    url: new URL(url ?? '', SITE_URL).href,
+    datePublished: publishedDate,
+    dateModified: modifiedDate ?? publishedDate,
+    publisher: {
+      '@type': 'Organization',
+      name: SITE_NAME,
+      url: SITE_URL,
+    },
+  };
+}
+
+/** Genera JSON-LD para el sitio web */
+export function generateWebsiteJsonLd() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: SITE_NAME,
+    url: SITE_URL,
+    description: 'Blog sobre inversión, ahorro, criptomonedas y fiscalidad en España',
+    publisher: {
+      '@type': 'Organization',
+      name: SITE_NAME,
+    },
+  };
+}

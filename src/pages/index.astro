@@ -1,0 +1,76 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import CategoryBadge from '../components/CategoryBadge.astro';
+
+const allPosts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const categories = ['inversion', 'ahorro', 'cripto', 'fiscalidad'] as const;
+
+const categoryLabels = {
+  inversion: { title: 'Inversión', desc: 'ETFs, fondos, bolsa y estrategias' },
+  ahorro: { title: 'Ahorro', desc: 'Economía personal y presupuestos' },
+  cripto: { title: 'Criptomonedas', desc: 'Bitcoin, Ethereum y altcoins' },
+  fiscalidad: { title: 'Fiscalidad', desc: 'Impuestos y declaración de la renta' },
+};
+---
+
+<BaseLayout
+  seo={{
+    title: 'RentaBase',
+    description: 'Blog sobre inversión, ahorro, criptomonedas y fiscalidad en España. Aprende a gestionar tu dinero con información clara y práctica.',
+    url: '/',
+  }}
+>
+  <!-- Hero -->
+  <section class="max-w-6xl mx-auto px-4 pt-16 pb-12 md:pt-24 md:pb-16">
+    <div class="max-w-3xl">
+      <h1 class="font-display text-4xl md:text-6xl font-bold leading-tight mb-6">
+        Tu dinero merece<br />
+        <span class="text-verde">decisiones informadas</span>
+      </h1>
+      <p class="text-lg md:text-xl text-texto/70 leading-relaxed max-w-2xl">
+        Inversión, ahorro, fiscalidad y criptomonedas explicados de forma clara.
+        Información práctica para gestionar tus finanzas en España.
+      </p>
+      <a
+        href="/blog"
+        class="inline-block mt-8 px-6 py-3 bg-verde text-white font-medium rounded-lg hover:bg-verde/90 transition-colors"
+      >
+        Explorar artículos
+      </a>
+    </div>
+  </section>
+
+  <!-- Últimos artículos -->
+  <section class="max-w-6xl mx-auto px-4 pb-16">
+    <div class="flex items-center justify-between mb-8">
+      <h2 class="font-display text-2xl md:text-3xl font-bold">Últimos artículos</h2>
+      <a href="/blog" class="text-sm text-verde font-medium hover:underline">Ver todos</a>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {allPosts.slice(0, 6).map((post) => (
+        <ArticleCard post={post} />
+      ))}
+    </div>
+  </section>
+
+  <!-- Categorías -->
+  <section class="max-w-6xl mx-auto px-4 pb-20">
+    <h2 class="font-display text-2xl md:text-3xl font-bold mb-8">Categorías</h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      {categories.map((cat) => (
+          <a
+            href={"/blog?categoria=" + cat}
+            class="block p-5 rounded-lg border border-texto/10 hover:border-verde/30 hover:bg-verde/[0.02] transition-all"
+          >
+            <CategoryBadge category={cat} />
+            <h3 class="font-display text-lg font-bold mt-3">{categoryLabels[cat].title}</h3>
+            <p class="text-sm text-texto/60 mt-1">{categoryLabels[cat].desc}</p>
+          </a>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

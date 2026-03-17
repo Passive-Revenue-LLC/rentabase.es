@@ -1,0 +1,97 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from './BaseLayout.astro';
+import CategoryBadge from '../components/CategoryBadge.astro';
+import AdBanner from '../components/AdBanner.astro';
+import { generateArticleJsonLd } from '../utils/seo';
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+}
+
+const { post } = Astro.props;
+const { title, description, pubDate, updatedDate, category, tags, image } = post.data;
+
+const articleJsonLd = generateArticleJsonLd({
+  title,
+  description,
+  image,
+  url: `/blog/${post.slug}`,
+  publishedDate: pubDate.toISOString(),
+  modifiedDate: updatedDate?.toISOString(),
+});
+
+/** Calcula el tiempo de lectura estimado */
+const words = post.body.split(/\s+/).length;
+const readingTime = Math.max(1, Math.ceil(words / 200));
+
+const formattedDate = pubDate.toLocaleDateString('es-ES', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<BaseLayout
+  seo={{ title, description, image, url: `/blog/${post.slug}`, type: 'article', publishedDate: pubDate.toISOString() }}
+  jsonLd={articleJsonLd}
+>
+  <article class="max-w-3xl mx-auto px-4 py-12">
+    <!-- Cabecera del artículo -->
+    <header class="mb-10">
+      <div class="flex items-center gap-3 mb-4">
+        <CategoryBadge category={category} />
+        <time datetime={pubDate.toISOString()} class="text-sm text-texto/60">
+          {formattedDate}
+        </time>
+        <span class="text-sm text-texto/60">·</span>
+        <span class="text-sm text-texto/60">{readingTime} min de lectura</span>
+      </div>
+      <h1 class="font-display text-4xl md:text-5xl font-bold leading-tight mb-4">
+        {title}
+      </h1>
+      <p class="text-lg text-texto/70 leading-relaxed">{description}</p>
+      {image && (
+        <img
+          src={image}
+          alt={title}
+          class="w-full rounded-lg mt-8 aspect-video object-cover"
+          loading="eager"
+        />
+      )}
+    </header>
+
+    <!-- Anuncio después del encabezado -->
+    <AdBanner position="after-intro" />
+
+    <!-- Cuerpo del artículo -->
+    <div class="prose prose-lg max-w-none
+      prose-headings:font-display prose-headings:text-texto
+      prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-4
+      prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3
+      prose-p:text-texto/85 prose-p:leading-relaxed
+      prose-a:text-verde prose-a:underline prose-a:underline-offset-2
+      prose-strong:text-texto
+      prose-ul:text-texto/85 prose-ol:text-texto/85
+      prose-li:leading-relaxed
+      prose-blockquote:border-verde prose-blockquote:text-texto/70">
+      <slot />
+    </div>
+
+    <!-- Anuncio al final del artículo -->
+    <AdBanner position="end-of-article" />
+
+    <!-- Tags -->
+    {tags.length > 0 && (
+      <footer class="mt-12 pt-8 border-t border-texto/10">
+        <div class="flex flex-wrap gap-2">
+          {tags.map((tag) => (
+            <span class="px-3 py-1 text-sm bg-texto/5 text-texto/60 rounded-full">
+              #{tag}
+            </span>
+          ))}
+        </div>
+      </footer>
+    )}
+  </article>
+</BaseLayout>
