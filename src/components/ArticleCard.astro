@@ -18,38 +18,70 @@ const formattedDate = pubDate.toLocaleDateString('es-ES', {
   month: 'short',
   day: 'numeric',
 });
+
+/** Gradientes de fondo por categoría cuando no hay imagen */
+const categoryGradients: Record<string, string> = {
+  inversion: 'from-verde/8 to-verde/3',
+  ahorro: 'from-dorado/8 to-dorado/3',
+  cripto: 'from-purple-100/80 to-purple-50/40',
+  fiscalidad: 'from-blue-100/80 to-blue-50/40',
+};
 ---
 
-<article class="group">
-  <a href={`/blog/${post.slug}`} class="block">
-    <!-- Imagen opcional -->
-    {image && (
-      <div class="aspect-video rounded-lg overflow-hidden mb-4 bg-texto/5">
+<article class="group h-full">
+  <a href={"/blog/" + post.slug} class="flex flex-col h-full rounded-xl bg-white border border-texto/8 shadow-sm overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+    <!-- Visual superior -->
+    <div class:list={[
+      'aspect-[16/10] relative overflow-hidden',
+      !image && `bg-gradient-to-br ${categoryGradients[category]}`,
+    ]}>
+      {image ? (
         <img
           src={image}
           alt={title}
-          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           loading="lazy"
         />
+      ) : (
+        <div class="w-full h-full flex items-center justify-center">
+          <span class="font-display text-6xl font-bold text-texto/[0.04] select-none group-hover:scale-110 transition-transform duration-500" aria-hidden="true">
+            RB
+          </span>
+        </div>
+      )}
+      <!-- Badge flotante -->
+      <div class="absolute top-4 left-4">
+        <CategoryBadge category={category} />
       </div>
-    )}
+    </div>
 
     <!-- Contenido -->
-    <div>
-      <div class="flex items-center gap-3 mb-2">
-        <CategoryBadge category={category} />
-        <span class="text-xs text-texto/50">{formattedDate}</span>
-        <span class="text-xs text-texto/50">·</span>
-        <span class="text-xs text-texto/50">{readingTime} min</span>
+    <div class="flex flex-col flex-1 p-5">
+      <div class="flex items-center gap-2 mb-3 text-xs text-texto/45">
+        <time datetime={pubDate.toISOString()}>
+          {formattedDate}
+        </time>
+        <span aria-hidden="true">&middot;</span>
+        <span>{readingTime} min de lectura</span>
       </div>
 
-      <h3 class="font-display text-xl font-bold leading-snug mb-2 group-hover:text-verde transition-colors">
+      <h3 class="font-display text-lg font-bold leading-snug mb-2 group-hover:text-verde transition-colors line-clamp-2">
         {title}
       </h3>
 
-      <p class="text-sm text-texto/65 leading-relaxed line-clamp-2">
+      <p class="text-sm text-texto/55 leading-relaxed line-clamp-2 mb-4">
         {description}
       </p>
+
+      <!-- Link con flecha -->
+      <div class="mt-auto">
+        <span class="inline-flex items-center gap-1.5 text-sm font-semibold text-verde group-hover:gap-2.5 transition-all">
+          Leer más
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          </svg>
+        </span>
+      </div>
     </div>
   </a>
 </article>

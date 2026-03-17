@@ -1,0 +1,37 @@
+---
+/** Tabla de contenidos generada automáticamente desde los headings del artículo */
+import type { MarkdownHeading } from 'astro';
+
+interface Props {
+  headings: MarkdownHeading[];
+}
+
+const { headings } = Astro.props;
+const toc = headings.filter((h) => h.depth === 2);
+---
+
+{toc.length > 2 && (
+  <nav class="mb-10 p-6 bg-white rounded-xl border border-texto/8 shadow-sm" aria-label="Tabla de contenidos">
+    <h2 class="font-display text-lg font-bold mb-4 flex items-center gap-2">
+      <svg class="w-5 h-5 text-verde" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h10M4 18h7" />
+      </svg>
+      En este artículo
+    </h2>
+    <ol class="space-y-2">
+      {toc.map((heading, i) => (
+        <li>
+          <a
+            href={"#" + heading.slug}
+            class="group flex items-start gap-3 text-sm text-texto/60 hover:text-verde transition-colors"
+          >
+            <span class="shrink-0 w-6 h-6 rounded-full bg-verde/8 text-verde text-xs font-semibold flex items-center justify-center group-hover:bg-verde group-hover:text-white transition-all">
+              {i + 1}
+            </span>
+            <span class="pt-0.5">{heading.text}</span>
+          </a>
+        </li>
+      ))}
+    </ol>
+  </nav>
+)}

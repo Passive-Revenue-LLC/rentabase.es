@@ -3,13 +3,18 @@ import type { CollectionEntry } from 'astro:content';
 import BaseLayout from './BaseLayout.astro';
 import CategoryBadge from '../components/CategoryBadge.astro';
 import AdBanner from '../components/AdBanner.astro';
+import ReadingProgress from '../components/ReadingProgress.astro';
+import TableOfContents from '../components/TableOfContents.astro';
+import NewsletterCTA from '../components/NewsletterCTA.astro';
 import { generateArticleJsonLd } from '../utils/seo';
+import type { MarkdownHeading } from 'astro';
 
 interface Props {
   post: CollectionEntry<'blog'>;
+  headings: MarkdownHeading[];
 }
 
-const { post } = Astro.props;
+const { post, headings } = Astro.props;
 const { title, description, pubDate, updatedDate, category, tags, image } = post.data;
 
 const articleJsonLd = generateArticleJsonLd({
@@ -36,45 +41,91 @@ const formattedDate = pubDate.toLocaleDateString('es-ES', {
   seo={{ title, description, image, url: `/blog/${post.slug}`, type: 'article', publishedDate: pubDate.toISOString() }}
   jsonLd={articleJsonLd}
 >
-  <article class="max-w-3xl mx-auto px-4 py-12">
+  <ReadingProgress />
+
+  <article class="max-w-3xl mx-auto px-4 pt-8 pb-16 md:pt-14">
+    <!-- Breadcrumb -->
+    <nav class="flex items-center gap-2 text-sm text-texto/40 mb-8 animate-fade-in" aria-label="Migas de pan">
+      <a href="/" class="hover:text-verde transition-colors">Inicio</a>
+      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+      </svg>
+      <a href="/blog" class="hover:text-verde transition-colors">Blog</a>
+      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+      </svg>
+      <span class="text-texto/60 truncate">{title}</span>
+    </nav>
+
     <!-- Cabecera del artículo -->
-    <header class="mb-10">
-      <div class="flex items-center gap-3 mb-4">
+    <header class="mb-10 animate-fade-up">
+      <div class="flex items-center gap-3 mb-5">
         <CategoryBadge category={category} />
-        <time datetime={pubDate.toISOString()} class="text-sm text-texto/60">
-          {formattedDate}
-        </time>
-        <span class="text-sm text-texto/60">·</span>
-        <span class="text-sm text-texto/60">{readingTime} min de lectura</span>
       </div>
-      <h1 class="font-display text-4xl md:text-5xl font-bold leading-tight mb-4">
+      <h1 class="font-display text-3xl sm:text-4xl md:text-5xl font-bold leading-[1.15] mb-5">
         {title}
       </h1>
-      <p class="text-lg text-texto/70 leading-relaxed">{description}</p>
+      <p class="text-lg text-texto/60 leading-relaxed max-w-2xl">{description}</p>
+
+      <!-- Meta info -->
+      <div class="flex flex-wrap items-center gap-x-4 gap-y-2 mt-6 pt-6 border-t border-texto/8">
+        <div class="flex items-center gap-2 text-sm text-texto/50">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+          <time datetime={pubDate.toISOString()}>{formattedDate}</time>
+        </div>
+        <div class="flex items-center gap-2 text-sm text-texto/50">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span>{readingTime} min de lectura</span>
+        </div>
+        {updatedDate && (
+          <div class="flex items-center gap-2 text-sm text-texto/50">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            <span>Actualizado: {updatedDate.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+          </div>
+        )}
+      </div>
+
       {image && (
         <img
           src={image}
           alt={title}
-          class="w-full rounded-lg mt-8 aspect-video object-cover"
+          class="w-full rounded-xl mt-8 aspect-video object-cover shadow-sm"
           loading="eager"
         />
       )}
     </header>
 
+    <!-- Tabla de contenidos -->
+    <TableOfContents headings={headings} />
+
     <!-- Anuncio después del encabezado -->
     <AdBanner position="after-intro" />
 
-    <!-- Cuerpo del artículo -->
-    <div class="prose prose-lg max-w-none
-      prose-headings:font-display prose-headings:text-texto
-      prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-4
+    <!-- Cuerpo del artículo con tipografía mejorada -->
+    <div class="article-content prose prose-lg
+      prose-headings:font-display prose-headings:text-texto prose-headings:scroll-mt-20
+      prose-h2:text-2xl prose-h2:mt-12 prose-h2:mb-5 prose-h2:pb-3 prose-h2:border-b prose-h2:border-texto/8
       prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3
-      prose-p:text-texto/85 prose-p:leading-relaxed
-      prose-a:text-verde prose-a:underline prose-a:underline-offset-2
-      prose-strong:text-texto
-      prose-ul:text-texto/85 prose-ol:text-texto/85
-      prose-li:leading-relaxed
-      prose-blockquote:border-verde prose-blockquote:text-texto/70">
+      prose-p:text-texto/80 prose-p:leading-[1.8] prose-p:mb-5
+      prose-a:text-verde prose-a:font-medium prose-a:underline prose-a:underline-offset-4 prose-a:decoration-verde/30 hover:prose-a:decoration-verde
+      prose-strong:text-texto prose-strong:font-semibold
+      prose-ul:my-6 prose-ol:my-6
+      prose-li:text-texto/80 prose-li:leading-[1.8] prose-li:my-1
+      prose-blockquote:border-l-[3px] prose-blockquote:border-verde prose-blockquote:bg-verde/[0.03] prose-blockquote:rounded-r-lg prose-blockquote:py-4 prose-blockquote:px-6 prose-blockquote:not-italic prose-blockquote:text-texto/70
+      prose-table:border prose-table:border-texto/10 prose-table:rounded-lg prose-table:overflow-hidden
+      prose-thead:bg-texto/[0.03]
+      prose-th:py-3 prose-th:px-4 prose-th:text-left prose-th:font-semibold prose-th:text-texto/80 prose-th:text-sm
+      prose-td:py-3 prose-td:px-4 prose-td:text-sm
+      prose-tr:border-b prose-tr:border-texto/8
+      prose-code:bg-texto/5 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm prose-code:font-normal prose-code:before:content-none prose-code:after:content-none
+      prose-img:rounded-xl prose-img:shadow-sm
+      max-w-none">
       <slot />
     </div>
 
@@ -83,15 +134,21 @@ const formattedDate = pubDate.toLocaleDateString('es-ES', {
 
     <!-- Tags -->
     {tags.length > 0 && (
-      <footer class="mt-12 pt-8 border-t border-texto/10">
+      <footer class="mt-14 pt-8 border-t border-texto/10">
+        <p class="text-xs font-semibold uppercase tracking-wider text-texto/40 mb-3">Etiquetas</p>
         <div class="flex flex-wrap gap-2">
           {tags.map((tag) => (
-            <span class="px-3 py-1 text-sm bg-texto/5 text-texto/60 rounded-full">
+            <span class="px-3 py-1.5 text-sm bg-white border border-texto/8 text-texto/55 rounded-lg hover:border-verde/30 hover:text-verde transition-colors cursor-default">
               #{tag}
             </span>
           ))}
         </div>
       </footer>
     )}
+
+    <!-- CTA Newsletter después del artículo -->
+    <div class="mt-14">
+      <NewsletterCTA />
+    </div>
   </article>
 </BaseLayout>

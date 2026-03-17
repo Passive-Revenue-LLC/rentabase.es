@@ -1,0 +1,50 @@
+---
+/**
+ * Sección CTA para captar suscriptores.
+ * Placeholder visual — conectar con servicio de email cuando esté listo.
+ */
+---
+
+<section class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-texto via-texto to-verde/90 text-white p-8 md:p-12">
+  <!-- Patrón decorativo -->
+  <div class="absolute inset-0 opacity-[0.04]" aria-hidden="true">
+    <svg class="w-full h-full" viewBox="0 0 400 400">
+      <defs>
+        <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" stroke-width="0.5" />
+        </pattern>
+      </defs>
+      <rect width="400" height="400" fill="url(#grid)" />
+    </svg>
+  </div>
+
+  <div class="relative z-10 max-w-xl">
+    <span class="inline-block px-3 py-1 bg-dorado/20 text-dorado rounded-full text-xs font-semibold uppercase tracking-wider mb-4">
+      Newsletter gratuita
+    </span>
+    <h2 class="font-display text-2xl md:text-3xl font-bold leading-snug mb-3">
+      Recibe las mejores guías financieras en tu email
+    </h2>
+    <p class="text-white/70 leading-relaxed mb-6">
+      Una vez por semana, sin spam. Artículos sobre inversión, ahorro y fiscalidad
+      directamente en tu bandeja de entrada.
+    </p>
+
+    <!-- Formulario placeholder — conectar con Mailchimp, ConvertKit, etc. -->
+    <form class="flex flex-col sm:flex-row gap-3" onsubmit="return false;">
+      <input
+        type="email"
+        placeholder="tu@email.com"
+        class="flex-1 px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:border-dorado focus:ring-1 focus:ring-dorado transition-colors"
+        aria-label="Dirección de email"
+      />
+      <button
+        type="submit"
+        class="px-6 py-3 bg-dorado text-texto font-semibold rounded-lg hover:bg-dorado/90 transition-all hover:shadow-lg hover:shadow-dorado/25 shrink-0"
+      >
+        Suscribirme
+      </button>
+    </form>
+    <p class="text-xs text-white/40 mt-3">Sin spam. Cancela cuando quieras.</p>
+  </div>
+</section>

@@ -1,0 +1,28 @@
+---
+/** Barra de progreso de lectura que aparece en la parte superior del viewport */
+---
+
+<div
+  id="reading-progress"
+  class="fixed top-0 left-0 h-[3px] bg-gradient-to-r from-verde to-dorado z-[60] transition-all duration-150 ease-out"
+  style="width: 0%"
+  aria-hidden="true"
+></div>
+
+<script>
+  const bar = document.getElementById('reading-progress') as HTMLElement;
+  const article = document.querySelector('article') as HTMLElement;
+
+  if (bar && article) {
+    const update = () => {
+      const rect = article.getBoundingClientRect();
+      const total = article.scrollHeight - window.innerHeight;
+      const scrolled = -rect.top;
+      const pct = Math.min(100, Math.max(0, (scrolled / total) * 100));
+      bar.style.width = `${pct}%`;
+    };
+
+    window.addEventListener('scroll', update, { passive: true });
+    update();
+  }
+</script>

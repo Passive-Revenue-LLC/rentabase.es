@@ -3,17 +3,28 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ArticleCard from '../components/ArticleCard.astro';
 import CategoryBadge from '../components/CategoryBadge.astro';
+import NewsletterCTA from '../components/NewsletterCTA.astro';
 
 const allPosts = (await getCollection('blog', ({ data }) => !data.draft))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
+const featuredPost = allPosts[0];
+const restPosts = allPosts.slice(1);
+
 const categories = ['inversion', 'ahorro', 'cripto', 'fiscalidad'] as const;
 
 const categoryLabels = {
-  inversion: { title: 'Inversión', desc: 'ETFs, fondos, bolsa y estrategias' },
-  ahorro: { title: 'Ahorro', desc: 'Economía personal y presupuestos' },
-  cripto: { title: 'Criptomonedas', desc: 'Bitcoin, Ethereum y altcoins' },
-  fiscalidad: { title: 'Fiscalidad', desc: 'Impuestos y declaración de la renta' },
+  inversion: { title: 'Inversión', desc: 'ETFs, fondos, bolsa y estrategias', icon: '&#9650;' },
+  ahorro: { title: 'Ahorro', desc: 'Economía personal y presupuestos', icon: '&#9679;' },
+  cripto: { title: 'Criptomonedas', desc: 'Bitcoin, Ethereum y altcoins', icon: '&#9670;' },
+  fiscalidad: { title: 'Fiscalidad', desc: 'Impuestos y declaración de la renta', icon: '&#9632;' },
+};
+
+const categoryIcons = {
+  inversion: 'M13 7h8m0 0v8m0-8l-8 8-4-4-6 6',
+  ahorro: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z',
+  cripto: 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4',
+  fiscalidad: 'M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z',
 };
 ---
 
@@ -25,52 +36,146 @@ const categoryLabels = {
   }}
 >
   <!-- Hero -->
-  <section class="max-w-6xl mx-auto px-4 pt-16 pb-12 md:pt-24 md:pb-16">
-    <div class="max-w-3xl">
-      <h1 class="font-display text-4xl md:text-6xl font-bold leading-tight mb-6">
-        Tu dinero merece<br />
-        <span class="text-verde">decisiones informadas</span>
-      </h1>
-      <p class="text-lg md:text-xl text-texto/70 leading-relaxed max-w-2xl">
-        Inversión, ahorro, fiscalidad y criptomonedas explicados de forma clara.
-        Información práctica para gestionar tus finanzas en España.
-      </p>
-      <a
-        href="/blog"
-        class="inline-block mt-8 px-6 py-3 bg-verde text-white font-medium rounded-lg hover:bg-verde/90 transition-colors"
-      >
-        Explorar artículos
-      </a>
+  <section class="relative overflow-hidden">
+    <!-- Patrón decorativo sutil -->
+    <div class="absolute inset-0 opacity-[0.03]" aria-hidden="true">
+      <svg class="w-full h-full" viewBox="0 0 800 600">
+        <defs>
+          <pattern id="hero-grid" width="60" height="60" patternUnits="userSpaceOnUse">
+            <circle cx="1" cy="1" r="1" fill="currentColor" />
+          </pattern>
+        </defs>
+        <rect width="800" height="600" fill="url(#hero-grid)" />
+      </svg>
     </div>
+
+    <div class="max-w-6xl mx-auto px-4 pt-16 pb-16 md:pt-28 md:pb-24 relative z-10">
+      <div class="max-w-3xl">
+        <span class="inline-block px-3 py-1 bg-verde/8 text-verde rounded-full text-xs font-semibold uppercase tracking-wider mb-6 animate-fade-in">
+          Finanzas personales en espa&ntilde;ol
+        </span>
+        <h1 class="font-display text-5xl md:text-7xl font-bold leading-[1.1] mb-6 animate-fade-up">
+          Tu dinero merece<br />
+          <span class="text-verde relative">
+            decisiones informadas
+            <svg class="absolute -bottom-2 left-0 w-full h-3 text-verde/20" viewBox="0 0 300 12" preserveAspectRatio="none" aria-hidden="true">
+              <path d="M0 9c60-9 120-9 150 0s90 9 150 0" stroke="currentColor" stroke-width="3" fill="none" />
+            </svg>
+          </span>
+        </h1>
+        <p class="text-lg md:text-xl text-texto/65 leading-relaxed max-w-2xl animate-fade-up" style="animation-delay: 0.15s">
+          Inversión, ahorro, fiscalidad y criptomonedas explicados de forma clara.
+          Información práctica para gestionar tus finanzas en España.
+        </p>
+        <div class="flex flex-wrap gap-4 mt-10 animate-fade-up" style="animation-delay: 0.3s">
+          <a
+            href="/blog"
+            class="inline-flex items-center gap-2 px-7 py-3.5 bg-verde text-white font-semibold rounded-xl hover:bg-verde/90 transition-all hover:shadow-lg hover:shadow-verde/20 hover:-translate-y-0.5"
+          >
+            Explorar artículos
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </a>
+          <a
+            href="/sobre-nosotros"
+            class="inline-flex items-center gap-2 px-7 py-3.5 border border-texto/15 text-texto/70 font-medium rounded-xl hover:border-verde/30 hover:text-verde transition-all"
+          >
+            Sobre nosotros
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gradiente inferior -->
+    <div class="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-fondo to-transparent" aria-hidden="true"></div>
   </section>
 
-  <!-- Últimos artículos -->
-  <section class="max-w-6xl mx-auto px-4 pb-16">
-    <div class="flex items-center justify-between mb-8">
+  <!-- Artículo destacado -->
+  {featuredPost && (
+    <section class="max-w-6xl mx-auto px-4 pb-16">
+      <div class="reveal">
+        <a href={"/blog/" + featuredPost.slug} class="group block relative rounded-2xl bg-white border border-texto/8 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-1">
+          <div class="grid md:grid-cols-2 gap-0">
+            <!-- Lado visual -->
+            <div class="aspect-[4/3] md:aspect-auto bg-gradient-to-br from-verde/10 via-dorado/5 to-verde/5 flex items-center justify-center p-12">
+              <div class="text-center">
+                <CategoryBadge category={featuredPost.data.category} />
+                <div class="mt-4 font-display text-6xl md:text-8xl font-bold text-verde/10 select-none" aria-hidden="true">01</div>
+              </div>
+            </div>
+            <!-- Contenido -->
+            <div class="p-8 md:p-10 flex flex-col justify-center">
+              <span class="text-xs font-semibold uppercase tracking-wider text-dorado mb-3">Artículo destacado</span>
+              <h2 class="font-display text-2xl md:text-3xl font-bold leading-snug mb-4 group-hover:text-verde transition-colors">
+                {featuredPost.data.title}
+              </h2>
+              <p class="text-texto/60 leading-relaxed mb-6">
+                {featuredPost.data.description}
+              </p>
+              <span class="inline-flex items-center gap-2 text-sm font-semibold text-verde group-hover:gap-3 transition-all">
+                Leer artículo
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </span>
+            </div>
+          </div>
+        </a>
+      </div>
+    </section>
+  )}
+
+  <!-- Más artículos -->
+  <section class="max-w-6xl mx-auto px-4 pb-20">
+    <div class="flex items-center justify-between mb-8 reveal">
       <h2 class="font-display text-2xl md:text-3xl font-bold">Últimos artículos</h2>
-      <a href="/blog" class="text-sm text-verde font-medium hover:underline">Ver todos</a>
+      <a href="/blog" class="text-sm text-verde font-semibold hover:underline underline-offset-4 flex items-center gap-1">
+        Ver todos
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </a>
     </div>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      {allPosts.slice(0, 6).map((post) => (
-        <ArticleCard post={post} />
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 reveal-stagger">
+      {restPosts.slice(0, 6).map((post) => (
+        <div class="reveal">
+          <ArticleCard post={post} />
+        </div>
       ))}
     </div>
   </section>
 
   <!-- Categorías -->
   <section class="max-w-6xl mx-auto px-4 pb-20">
-    <h2 class="font-display text-2xl md:text-3xl font-bold mb-8">Categorías</h2>
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div class="text-center mb-10 reveal">
+      <h2 class="font-display text-2xl md:text-3xl font-bold mb-3">Explora por categoría</h2>
+      <p class="text-texto/55 max-w-lg mx-auto">Encuentra el contenido que más te interesa según tu objetivo financiero.</p>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 reveal-stagger">
       {categories.map((cat) => (
-          <a
-            href={"/blog?categoria=" + cat}
-            class="block p-5 rounded-lg border border-texto/10 hover:border-verde/30 hover:bg-verde/[0.02] transition-all"
-          >
-            <CategoryBadge category={cat} />
-            <h3 class="font-display text-lg font-bold mt-3">{categoryLabels[cat].title}</h3>
-            <p class="text-sm text-texto/60 mt-1">{categoryLabels[cat].desc}</p>
-          </a>
+        <a
+          href={"/blog?categoria=" + cat}
+          class="reveal group relative block p-6 rounded-xl bg-white border border-texto/8 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+        >
+          <div class="w-10 h-10 rounded-lg bg-verde/8 flex items-center justify-center mb-4 group-hover:bg-verde group-hover:text-white transition-all duration-300">
+            <svg class="w-5 h-5 text-verde group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d={categoryIcons[cat]} />
+            </svg>
+          </div>
+          <h3 class="font-display text-lg font-bold mb-1 group-hover:text-verde transition-colors">{categoryLabels[cat].title}</h3>
+          <p class="text-sm text-texto/55 leading-relaxed">{categoryLabels[cat].desc}</p>
+          <!-- Flecha decorativa -->
+          <svg class="absolute top-6 right-6 w-4 h-4 text-texto/20 group-hover:text-verde group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </a>
       ))}
     </div>
+  </section>
+
+  <!-- Newsletter CTA -->
+  <section class="max-w-6xl mx-auto px-4 pb-20 reveal">
+    <NewsletterCTA />
   </section>
 </BaseLayout>
