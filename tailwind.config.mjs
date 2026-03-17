@@ -37,26 +37,7 @@ export default {
         'slide-in-right': 'slide-in-right 0.5s ease-out both',
         'scale-in': 'scale-in 0.4s ease-out both',
       },
-      typography: ({ theme }) => ({
-        DEFAULT: {
-          css: {
-            '--tw-prose-body': theme('colors.texto / 85%'),
-            '--tw-prose-headings': theme('colors.texto'),
-            '--tw-prose-links': theme('colors.verde'),
-            '--tw-prose-bold': theme('colors.texto'),
-            '--tw-prose-quotes': theme('colors.texto / 70%'),
-            '--tw-prose-quote-borders': theme('colors.verde'),
-            '--tw-prose-counters': theme('colors.verde'),
-            '--tw-prose-bullets': theme('colors.verde / 60%'),
-            '--tw-prose-th-borders': theme('colors.texto / 15%'),
-            '--tw-prose-td-borders': theme('colors.texto / 10%'),
-            maxWidth: 'none',
-          },
-        },
-      }),
     },
   },
-  plugins: [
-    require('@tailwindcss/typography'),
-  ],
+  plugins: [],
 };

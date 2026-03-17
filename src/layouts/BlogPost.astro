@@ -107,25 +107,8 @@ const formattedDate = pubDate.toLocaleDateString('es-ES', {
     <!-- Anuncio después del encabezado -->
     <AdBanner position="after-intro" />
 
-    <!-- Cuerpo del artículo con tipografía mejorada -->
-    <div class="article-content prose prose-lg
-      prose-headings:font-display prose-headings:text-texto prose-headings:scroll-mt-20
-      prose-h2:text-2xl prose-h2:mt-12 prose-h2:mb-5 prose-h2:pb-3 prose-h2:border-b prose-h2:border-texto/8
-      prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3
-      prose-p:text-texto/80 prose-p:leading-[1.8] prose-p:mb-5
-      prose-a:text-verde prose-a:font-medium prose-a:underline prose-a:underline-offset-4 prose-a:decoration-verde/30 hover:prose-a:decoration-verde
-      prose-strong:text-texto prose-strong:font-semibold
-      prose-ul:my-6 prose-ol:my-6
-      prose-li:text-texto/80 prose-li:leading-[1.8] prose-li:my-1
-      prose-blockquote:border-l-[3px] prose-blockquote:border-verde prose-blockquote:bg-verde/[0.03] prose-blockquote:rounded-r-lg prose-blockquote:py-4 prose-blockquote:px-6 prose-blockquote:not-italic prose-blockquote:text-texto/70
-      prose-table:border prose-table:border-texto/10 prose-table:rounded-lg prose-table:overflow-hidden
-      prose-thead:bg-texto/[0.03]
-      prose-th:py-3 prose-th:px-4 prose-th:text-left prose-th:font-semibold prose-th:text-texto/80 prose-th:text-sm
-      prose-td:py-3 prose-td:px-4 prose-td:text-sm
-      prose-tr:border-b prose-tr:border-texto/8
-      prose-code:bg-texto/5 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm prose-code:font-normal prose-code:before:content-none prose-code:after:content-none
-      prose-img:rounded-xl prose-img:shadow-sm
-      max-w-none">
+    <!-- Cuerpo del artículo -->
+    <div class="article-content">
       <slot />
     </div>
 
