@@ -1,7 +1,6 @@
 ---
 /**
- * Sección CTA para captar suscriptores.
- * Placeholder visual — conectar con servicio de email cuando esté listo.
+ * Sección CTA para captar suscriptores vía Buttondown.
  */
 ---
 
@@ -30,11 +29,17 @@
       directamente en tu bandeja de entrada.
     </p>
 
-    <!-- Formulario placeholder — conectar con Mailchimp, ConvertKit, etc. -->
-    <form class="flex flex-col sm:flex-row gap-3" onsubmit="return false;">
+    <form
+      action="https://buttondown.com/api/emails/embed-subscribe/algorodev"
+      method="post"
+      target="_blank"
+      class="flex flex-col sm:flex-row gap-3"
+    >
       <input
         type="email"
+        name="email"
         placeholder="tu@email.com"
+        required
         class="flex-1 px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:border-dorado focus:ring-1 focus:ring-dorado transition-colors"
         aria-label="Dirección de email"
       />
