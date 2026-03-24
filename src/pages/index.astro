@@ -98,7 +98,7 @@ const categoryIcons = {
         <a href={"/blog/" + featuredPost.slug} class="group block relative rounded-2xl bg-white border border-texto/8 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-1">
           <div class="grid md:grid-cols-2 gap-0">
             <!-- Lado visual -->
-            <div class="aspect-[4/3] md:aspect-auto bg-gradient-to-br from-verde/10 via-dorado/5 to-verde/5 flex items-center justify-center p-12">
+            <div class="aspect-[4/3] md:aspect-auto bg-gradient-to-br from-verde/10 via-acento/5 to-verde/5 flex items-center justify-center p-12">
               <div class="text-center">
                 <CategoryBadge category={featuredPost.data.category} />
                 <div class="mt-4 font-display text-6xl md:text-8xl font-bold text-verde/10 select-none" aria-hidden="true">01</div>
@@ -106,7 +106,7 @@ const categoryIcons = {
             </div>
             <!-- Contenido -->
             <div class="p-8 md:p-10 flex flex-col justify-center">
-              <span class="text-xs font-semibold uppercase tracking-wider text-dorado mb-3">Artículo destacado</span>
+              <span class="text-xs font-semibold uppercase tracking-wider text-verde mb-3">Artículo destacado</span>
               <h2 class="font-display text-2xl md:text-3xl font-bold leading-snug mb-4 group-hover:text-verde transition-colors">
                 {featuredPost.data.title}
               </h2>

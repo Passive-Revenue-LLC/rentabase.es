@@ -4,14 +4,14 @@ export default {
   theme: {
     extend: {
       colors: {
-        fondo: '#FAFAF8',
-        texto: '#1A1A1A',
-        verde: '#1B6B3A',
-        dorado: '#C9963E',
+        fondo: '#F1F1F1',
+        texto: '#111113',
+        verde: '#283F3B',
+        acento: '#DAFA34',
       },
       fontFamily: {
-        display: ['"Playfair Display"', 'serif'],
-        body: ['"Source Sans 3"', 'sans-serif'],
+        display: ['"Funnel Display"', 'sans-serif'],
+        body: ['"Funnel Display"', 'sans-serif'],
       },
       keyframes: {
         'fade-up': {
