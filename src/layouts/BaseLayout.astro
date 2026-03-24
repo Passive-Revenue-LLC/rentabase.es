@@ -49,6 +49,9 @@ const websiteJsonLd = generateWebsiteJsonLd();
     <!-- JSON-LD adicional (artículo, etc.) -->
     {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
 
+    <!-- Favicon -->
+    <link rel="icon" href="/favicon.ico" />
+
     <!-- Tipografías -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
