@@ -6,7 +6,7 @@ import AdBanner from '../components/AdBanner.astro';
 import ReadingProgress from '../components/ReadingProgress.astro';
 import TableOfContents from '../components/TableOfContents.astro';
 import NewsletterCTA from '../components/NewsletterCTA.astro';
-import { generateArticleJsonLd } from '../utils/seo';
+import { generateArticleJsonLd, generateBreadcrumbJsonLd } from '../utils/seo';
 import type { MarkdownHeading } from 'astro';
 
 interface Props {
@@ -26,6 +26,12 @@ const articleJsonLd = generateArticleJsonLd({
   modifiedDate: updatedDate?.toISOString(),
 });
 
+const breadcrumbJsonLd = generateBreadcrumbJsonLd([
+  { name: 'Inicio', url: '/' },
+  { name: 'Blog', url: '/blog' },
+  { name: title, url: `/blog/${post.slug}` },
+]);
+
 /** Calcula el tiempo de lectura estimado */
 const words = post.body.split(/\s+/).length;
 const readingTime = Math.max(1, Math.ceil(words / 200));
@@ -39,7 +45,7 @@ const formattedDate = pubDate.toLocaleDateString('es-ES', {
 
 <BaseLayout
   seo={{ title, description, image, url: `/blog/${post.slug}`, type: 'article', publishedDate: pubDate.toISOString() }}
-  jsonLd={articleJsonLd}
+  jsonLd={[articleJsonLd, breadcrumbJsonLd]}
 >
   <ReadingProgress />
 

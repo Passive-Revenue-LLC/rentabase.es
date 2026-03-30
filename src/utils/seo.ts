@@ -83,11 +83,32 @@ export function generateArticleJsonLd({
     url: new URL(url ?? '', SITE_URL).href,
     datePublished: publishedDate,
     dateModified: modifiedDate ?? publishedDate,
+    author: {
+      '@type': 'Organization',
+      name: SITE_NAME,
+      url: SITE_URL,
+    },
     publisher: {
       '@type': 'Organization',
       name: SITE_NAME,
       url: SITE_URL,
     },
+  };
+}
+
+/** Genera JSON-LD para breadcrumbs */
+export function generateBreadcrumbJsonLd(
+  items: { name: string; url: string }[]
+) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: item.name,
+      item: new URL(item.url, SITE_URL).href,
+    })),
   };
 }
 

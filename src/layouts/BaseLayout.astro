@@ -8,10 +8,11 @@ import '../styles/article.css';
 interface Props {
   seo: SEOProps;
   /** JSON-LD adicional para la página */
-  jsonLd?: Record<string, unknown>;
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
 }
 
 const { seo, jsonLd } = Astro.props;
+const jsonLdItems = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 const meta = generateSEO(seo);
 const websiteJsonLd = generateWebsiteJsonLd();
 ---
@@ -46,8 +47,10 @@ const websiteJsonLd = generateWebsiteJsonLd();
     <!-- JSON-LD: WebSite -->
     <script type="application/ld+json" set:html={JSON.stringify(websiteJsonLd)} />
 
-    <!-- JSON-LD adicional (artículo, etc.) -->
-    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+    <!-- JSON-LD adicional (artículo, breadcrumbs, etc.) -->
+    {jsonLdItems.map((item) => (
+      <script type="application/ld+json" set:html={JSON.stringify(item)} />
+    ))}
 
     <!-- Favicon -->
     <link rel="icon" href="/favicon.ico" />
