@@ -30,7 +30,7 @@ export interface SEOMeta {
 }
 
 const SITE_URL = 'https://rentabase.es';
-const DEFAULT_IMAGE = '/og-default.svg';
+const DEFAULT_IMAGE = '/og-default.png';
 const SITE_NAME = 'RentaBase';
 
 /** Genera todos los meta tags SEO necesarios */
