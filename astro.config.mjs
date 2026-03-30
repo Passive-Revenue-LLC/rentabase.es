@@ -5,5 +5,6 @@ import tailwind from '@astrojs/tailwind';
 
 export default defineConfig({
   site: 'https://rentabase.es',
+  trailingSlash: 'always',
   integrations: [mdx(), sitemap(), tailwind()],
 });

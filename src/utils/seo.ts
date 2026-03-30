@@ -33,6 +33,11 @@ const SITE_URL = 'https://rentabase.es';
 const DEFAULT_IMAGE = '/og-default.png';
 const SITE_NAME = 'RentaBase';
 
+/** Asegura trailing slash en las URLs para consistencia con el sitemap */
+function ensureTrailingSlash(url: string): string {
+  return url.endsWith('/') ? url : `${url}/`;
+}
+
 /** Genera todos los meta tags SEO necesarios */
 export function generateSEO({
   title,
@@ -42,7 +47,7 @@ export function generateSEO({
   type = 'website',
 }: SEOProps): SEOMeta {
   const fullTitle = title === SITE_NAME ? title : `${title} | ${SITE_NAME}`;
-  const canonicalURL = new URL(url, SITE_URL).href;
+  const canonicalURL = ensureTrailingSlash(new URL(url, SITE_URL).href);
   const ogImage = image ? new URL(image, SITE_URL).href : new URL(DEFAULT_IMAGE, SITE_URL).href;
 
   return {
@@ -80,7 +85,7 @@ export function generateArticleJsonLd({
     headline: title,
     description,
     image: image ? new URL(image, SITE_URL).href : undefined,
-    url: new URL(url ?? '', SITE_URL).href,
+    url: ensureTrailingSlash(new URL(url ?? '', SITE_URL).href),
     datePublished: publishedDate,
     dateModified: modifiedDate ?? publishedDate,
     author: {
@@ -107,7 +112,7 @@ export function generateBreadcrumbJsonLd(
       '@type': 'ListItem',
       position: index + 1,
       name: item.name,
-      item: new URL(item.url, SITE_URL).href,
+      item: ensureTrailingSlash(new URL(item.url, SITE_URL).href),
     })),
   };
 }
