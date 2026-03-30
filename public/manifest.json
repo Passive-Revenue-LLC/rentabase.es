@@ -1,0 +1,17 @@
+{
+  "name": "RentaBase",
+  "short_name": "RentaBase",
+  "description": "Blog sobre inversión, ahorro, criptomonedas y fiscalidad en España",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F1F1F1",
+  "theme_color": "#283F3B",
+  "lang": "es",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    }
+  ]
+}

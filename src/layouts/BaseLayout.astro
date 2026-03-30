@@ -52,8 +52,10 @@ const websiteJsonLd = generateWebsiteJsonLd();
       <script type="application/ld+json" set:html={JSON.stringify(item)} />
     ))}
 
-    <!-- Favicon -->
+    <!-- Favicon & Manifest -->
     <link rel="icon" href="/favicon.ico" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#283F3B" />
 
     <!-- RSS Feed -->
     <link rel="alternate" type="application/rss+xml" title="RentaBase" href="/rss.xml" />
