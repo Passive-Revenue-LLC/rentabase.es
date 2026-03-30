@@ -1,0 +1,80 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import InteresCompuesto from '../components/calculadoras/InteresCompuesto';
+import CalculadoraIRPF from '../components/calculadoras/CalculadoraIRPF';
+import ComparadorFondoETF from '../components/calculadoras/ComparadorFondoETF';
+---
+
+<BaseLayout
+  seo={{
+    title: 'Calculadoras financieras gratuitas | RentaBase',
+    description:
+      'Calcula el interés compuesto de tu inversión, cuánto pagarás de IRPF por tus ETFs y compara fondos indexados vs ETFs. Herramientas gratuitas para inversores españoles.',
+    url: '/calculadoras',
+  }}
+>
+  <!-- Hero -->
+  <section class="max-w-4xl mx-auto px-4 pt-12 md:pt-16 pb-8 text-center reveal">
+    <span class="inline-block text-xs font-medium tracking-wider uppercase text-verde bg-verde/8 px-3 py-1 rounded-full mb-4">
+      Herramientas gratuitas
+    </span>
+    <h1 class="font-display text-4xl md:text-5xl font-bold mb-4">
+      Calculadoras financieras
+    </h1>
+    <p class="text-texto/65 text-lg max-w-2xl mx-auto">
+      Simula el crecimiento de tu inversión, calcula impuestos sobre tus ganancias
+      y compara fondos indexados con ETFs. Todo en tiempo real y sin registros.
+    </p>
+  </section>
+
+  <!-- Interés Compuesto -->
+  <section class="max-w-4xl mx-auto px-4 py-6 reveal">
+    <div class="bg-white rounded-2xl shadow-sm border border-texto/[0.06] p-6 md:p-8">
+      <h2 class="font-display text-2xl font-bold mb-1">Calculadora de interés compuesto</h2>
+      <p class="text-texto/60 mb-6">
+        Descubre cuánto puede crecer tu inversión a lo largo del tiempo gracias al interés compuesto.
+      </p>
+      <InteresCompuesto client:load />
+      <p class="mt-6 text-sm text-texto/50">
+        ¿Quieres aprender más?
+        <a href="/blog/como-empezar-a-invertir-desde-cero/" class="text-verde hover:underline font-medium">
+          Cómo empezar a invertir desde cero
+        </a>
+      </p>
+    </div>
+  </section>
+
+  <!-- IRPF -->
+  <section class="max-w-4xl mx-auto px-4 py-6 reveal">
+    <div class="bg-white rounded-2xl shadow-sm border border-texto/[0.06] p-6 md:p-8">
+      <h2 class="font-display text-2xl font-bold mb-1">Calculadora de IRPF sobre ganancias</h2>
+      <p class="text-texto/60 mb-6">
+        Calcula cuánto tendrás que pagar a Hacienda por la venta de tus inversiones.
+      </p>
+      <CalculadoraIRPF client:load />
+      <p class="mt-6 text-sm text-texto/50">
+        ¿Quieres aprender más?
+        <a href="/blog/como-declarar-etfs-renta-espana/" class="text-verde hover:underline font-medium">
+          Cómo declarar ETFs en la renta en España
+        </a>
+      </p>
+    </div>
+  </section>
+
+  <!-- Comparador Fondo vs ETF -->
+  <section class="max-w-4xl mx-auto px-4 py-6 pb-16 reveal">
+    <div class="bg-white rounded-2xl shadow-sm border border-texto/[0.06] p-6 md:p-8">
+      <h2 class="font-display text-2xl font-bold mb-1">Comparador: Fondo indexado vs ETF</h2>
+      <p class="text-texto/60 mb-6">
+        Compara el resultado final de invertir en un fondo indexado frente a un ETF teniendo en cuenta comisiones.
+      </p>
+      <ComparadorFondoETF client:load />
+      <p class="mt-6 text-sm text-texto/50">
+        ¿Quieres aprender más?
+        <a href="/blog/fondos-indexados-vs-etfs-diferencias/" class="text-verde hover:underline font-medium">
+          Fondos indexados vs ETFs: diferencias
+        </a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>
