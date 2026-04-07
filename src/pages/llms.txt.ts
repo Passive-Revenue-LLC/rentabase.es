@@ -31,8 +31,9 @@ export async function GET(context: APIContext) {
 ## Páginas principales
 
 - [Inicio](https://rentabase.es/)
-- [Blog](https://rentabase.es/blog)
-- [Sobre nosotros](https://rentabase.es/sobre-nosotros)
+- [Blog](https://rentabase.es/blog/)
+- [Calculadoras financieras](https://rentabase.es/calculadoras/)
+- [Sobre nosotros](https://rentabase.es/sobre-nosotros/)
 
 ## Artículos del blog
 
@@ -42,7 +43,7 @@ export async function GET(context: APIContext) {
     const label = categoryLabels[category] || category;
     content += `### ${label}\n\n`;
     for (const post of posts) {
-      content += `- [${post.data.title}](https://rentabase.es/blog/${post.slug}): ${post.data.description}\n`;
+      content += `- [${post.data.title}](https://rentabase.es/blog/${post.slug}/): ${post.data.description}\n`;
     }
     content += '\n';
   }
