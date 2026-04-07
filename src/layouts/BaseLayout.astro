@@ -2,7 +2,12 @@
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import ScrollToTop from '../components/ScrollToTop.astro';
-import { generateSEO, generateWebsiteJsonLd, type SEOProps } from '../utils/seo';
+import {
+  generateSEO,
+  generateWebsiteJsonLd,
+  generateOrganizationJsonLd,
+  type SEOProps,
+} from '../utils/seo';
 import '../styles/article.css';
 
 interface Props {
@@ -15,6 +20,7 @@ const { seo, jsonLd } = Astro.props;
 const jsonLdItems = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 const meta = generateSEO(seo);
 const websiteJsonLd = generateWebsiteJsonLd();
+const organizationJsonLd = generateOrganizationJsonLd();
 ---
 
 <!doctype html>
@@ -28,6 +34,14 @@ const websiteJsonLd = generateWebsiteJsonLd();
     <title>{meta.title}</title>
     <meta name="description" content={meta.description} />
     <link rel="canonical" href={meta.canonical} />
+    <meta
+      name="robots"
+      content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+    />
+
+    <!-- hreflang -->
+    <link rel="alternate" hreflang="es-ES" href={meta.canonical} />
+    <link rel="alternate" hreflang="x-default" href={meta.canonical} />
 
     <!-- Open Graph -->
     <meta property="og:title" content={meta.openGraph.title} />
@@ -44,8 +58,9 @@ const websiteJsonLd = generateWebsiteJsonLd();
     <meta name="twitter:description" content={meta.twitter.description} />
     <meta name="twitter:image" content={meta.twitter.image} />
 
-    <!-- JSON-LD: WebSite -->
+    <!-- JSON-LD: WebSite + Organization -->
     <script type="application/ld+json" set:html={JSON.stringify(websiteJsonLd)} />
+    <script type="application/ld+json" set:html={JSON.stringify(organizationJsonLd)} />
 
     <!-- JSON-LD adicional (artículo, breadcrumbs, etc.) -->
     {jsonLdItems.map((item) => (

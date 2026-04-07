@@ -31,7 +31,10 @@ export interface SEOMeta {
 
 const SITE_URL = 'https://rentabase.es';
 const DEFAULT_IMAGE = '/og-default.png';
+const LOGO_IMAGE = '/og-default.png';
 const SITE_NAME = 'RentaBase';
+const SITE_DESCRIPTION =
+  'Blog sobre inversión, ahorro, criptomonedas y fiscalidad en España';
 
 /** Asegura trailing slash en las URLs para consistencia con el sitemap */
 function ensureTrailingSlash(url: string): string {
@@ -70,7 +73,7 @@ export function generateSEO({
   };
 }
 
-/** Genera JSON-LD para un artículo */
+/** Genera JSON-LD para un artículo (BlogPosting) */
 export function generateArticleJsonLd({
   title,
   description,
@@ -79,15 +82,26 @@ export function generateArticleJsonLd({
   publishedDate,
   modifiedDate,
 }: SEOProps) {
+  const canonicalURL = ensureTrailingSlash(new URL(url ?? '', SITE_URL).href);
+  const imageURL = image
+    ? new URL(image, SITE_URL).href
+    : new URL(DEFAULT_IMAGE, SITE_URL).href;
+  const logoURL = new URL(LOGO_IMAGE, SITE_URL).href;
+
   return {
     '@context': 'https://schema.org',
-    '@type': 'Article',
+    '@type': 'BlogPosting',
     headline: title,
     description,
-    image: image ? new URL(image, SITE_URL).href : undefined,
-    url: ensureTrailingSlash(new URL(url ?? '', SITE_URL).href),
+    image: imageURL,
+    url: canonicalURL,
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': canonicalURL,
+    },
     datePublished: publishedDate,
     dateModified: modifiedDate ?? publishedDate,
+    inLanguage: 'es-ES',
     author: {
       '@type': 'Organization',
       name: SITE_NAME,
@@ -97,6 +111,10 @@ export function generateArticleJsonLd({
       '@type': 'Organization',
       name: SITE_NAME,
       url: SITE_URL,
+      logo: {
+        '@type': 'ImageObject',
+        url: logoURL,
+      },
     },
   };
 }
@@ -124,10 +142,32 @@ export function generateWebsiteJsonLd() {
     '@type': 'WebSite',
     name: SITE_NAME,
     url: SITE_URL,
-    description: 'Blog sobre inversión, ahorro, criptomonedas y fiscalidad en España',
+    description: SITE_DESCRIPTION,
+    inLanguage: 'es-ES',
     publisher: {
       '@type': 'Organization',
       name: SITE_NAME,
+      url: SITE_URL,
+      logo: {
+        '@type': 'ImageObject',
+        url: new URL(LOGO_IMAGE, SITE_URL).href,
+      },
     },
+  };
+}
+
+/** Genera JSON-LD Organization (identidad de marca para LLMs y rich results) */
+export function generateOrganizationJsonLd() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: SITE_NAME,
+    url: SITE_URL,
+    description: SITE_DESCRIPTION,
+    logo: {
+      '@type': 'ImageObject',
+      url: new URL(LOGO_IMAGE, SITE_URL).href,
+    },
+    sameAs: [],
   };
 }
