@@ -1,13 +1,15 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import InteresCompuesto from '../components/calculadoras/InteresCompuesto';
+import FondoEmergencia from '../components/calculadoras/FondoEmergencia';
 import CalculadoraIRPF from '../components/calculadoras/CalculadoraIRPF';
+import HipotecaVsAlquiler from '../components/calculadoras/HipotecaVsAlquiler';
 import ComparadorFondoETF from '../components/calculadoras/ComparadorFondoETF';
 import { generateCalculatorsJsonLd, generateBreadcrumbJsonLd } from '../utils/seo';
 
 const calculatorsTitle = 'Calculadoras financieras gratis para España';
 const calculatorsDescription =
-  'Calcula interés compuesto, IRPF por tus ETFs y compara fondos indexados con ETFs en segundos. Tres herramientas gratuitas pensadas para inversores en España.';
+  'Calcula interés compuesto, tu fondo de emergencia, IRPF por tus ETFs, si te sale mejor comprar o alquilar, y compara fondos indexados con ETFs en segundos. Cinco herramientas gratuitas pensadas para inversores en España.';
 
 const calculators = [
   {
@@ -20,6 +22,15 @@ const calculators = [
     relatedLabel: 'Cómo empezar a invertir desde cero',
   },
   {
+    id: 'fondo-emergencia',
+    label: 'Fondo de emergencia',
+    short: 'Emergencia',
+    description:
+      'Calcula cuánto deberías tener ahorrado antes de empezar a invertir.',
+    relatedUrl: '/blog/fondo-de-emergencia-cuanto-necesitas/',
+    relatedLabel: 'Fondo de emergencia: cuánto necesitas realmente',
+  },
+  {
     id: 'irpf',
     label: 'IRPF sobre ganancias',
     short: 'IRPF',
@@ -27,6 +38,15 @@ const calculators = [
       'Calcula cuánto pagarás a Hacienda por la venta de tus inversiones.',
     relatedUrl: '/blog/como-declarar-etfs-renta-espana/',
     relatedLabel: 'Cómo declarar ETFs en la renta',
+  },
+  {
+    id: 'hipoteca-vs-alquiler',
+    label: 'Hipoteca vs alquiler',
+    short: 'Hipoteca',
+    description:
+      'Compara el patrimonio neto que generan comprar o alquilar a largo plazo.',
+    relatedUrl: '/blog/ahorrar-entrada-piso-espana/',
+    relatedLabel: 'Cómo ahorrar la entrada de un piso en España',
   },
   {
     id: 'fondo-vs-etf',
@@ -72,7 +92,7 @@ const breadcrumbJsonLd = generateBreadcrumbJsonLd([
       Calculadoras financieras
     </h1>
     <p class="text-texto/65 text-lg max-w-2xl mx-auto">
-      Tres herramientas para tomar mejores decisiones con tu dinero. En tiempo real,
+      Cinco herramientas para tomar mejores decisiones con tu dinero. En tiempo real,
       sin registros y sin guardar tus datos.
     </p>
   </section>
@@ -125,6 +145,27 @@ const breadcrumbJsonLd = generateBreadcrumbJsonLd([
       </div>
     </section>
 
+    <!-- Fondo de emergencia -->
+    <section
+      data-calc-panel="fondo-emergencia"
+      aria-labelledby="title-fondo-emergencia"
+      class="reveal hidden"
+    >
+      <div class="bg-white rounded-2xl shadow-sm border border-texto/[0.06] p-6 md:p-8">
+        <header class="mb-6">
+          <h2 id="title-fondo-emergencia" class="font-display text-2xl font-bold mb-1">Calculadora de fondo de emergencia</h2>
+          <p class="text-texto/60">{calculators[1].description}</p>
+        </header>
+        <FondoEmergencia client:load />
+        <p class="mt-6 text-sm text-texto/60">
+          ¿Quieres aprender más?
+          <a href={calculators[1].relatedUrl} class="text-verde hover:underline font-medium">
+            {calculators[1].relatedLabel}
+          </a>
+        </p>
+      </div>
+    </section>
+
     <!-- IRPF -->
     <section
       data-calc-panel="irpf"
@@ -134,13 +175,34 @@ const breadcrumbJsonLd = generateBreadcrumbJsonLd([
       <div class="bg-white rounded-2xl shadow-sm border border-texto/[0.06] p-6 md:p-8">
         <header class="mb-6">
           <h2 id="title-irpf" class="font-display text-2xl font-bold mb-1">Calculadora de IRPF sobre ganancias</h2>
-          <p class="text-texto/60">{calculators[1].description}</p>
+          <p class="text-texto/60">{calculators[2].description}</p>
         </header>
         <CalculadoraIRPF client:load />
         <p class="mt-6 text-sm text-texto/60">
           ¿Quieres aprender más?
-          <a href={calculators[1].relatedUrl} class="text-verde hover:underline font-medium">
-            {calculators[1].relatedLabel}
+          <a href={calculators[2].relatedUrl} class="text-verde hover:underline font-medium">
+            {calculators[2].relatedLabel}
+          </a>
+        </p>
+      </div>
+    </section>
+
+    <!-- Hipoteca vs alquiler -->
+    <section
+      data-calc-panel="hipoteca-vs-alquiler"
+      aria-labelledby="title-hipoteca-vs-alquiler"
+      class="reveal hidden"
+    >
+      <div class="bg-white rounded-2xl shadow-sm border border-texto/[0.06] p-6 md:p-8">
+        <header class="mb-6">
+          <h2 id="title-hipoteca-vs-alquiler" class="font-display text-2xl font-bold mb-1">Calculadora de hipoteca vs alquiler</h2>
+          <p class="text-texto/60">{calculators[3].description}</p>
+        </header>
+        <HipotecaVsAlquiler client:load />
+        <p class="mt-6 text-sm text-texto/60">
+          ¿Quieres aprender más?
+          <a href={calculators[3].relatedUrl} class="text-verde hover:underline font-medium">
+            {calculators[3].relatedLabel}
           </a>
         </p>
       </div>
@@ -155,13 +217,13 @@ const breadcrumbJsonLd = generateBreadcrumbJsonLd([
       <div class="bg-white rounded-2xl shadow-sm border border-texto/[0.06] p-6 md:p-8">
         <header class="mb-6">
           <h2 id="title-fondo-vs-etf" class="font-display text-2xl font-bold mb-1">Comparador: Fondo indexado vs ETF</h2>
-          <p class="text-texto/60">{calculators[2].description}</p>
+          <p class="text-texto/60">{calculators[4].description}</p>
         </header>
         <ComparadorFondoETF client:load />
         <p class="mt-6 text-sm text-texto/60">
           ¿Quieres aprender más?
-          <a href={calculators[2].relatedUrl} class="text-verde hover:underline font-medium">
-            {calculators[2].relatedLabel}
+          <a href={calculators[4].relatedUrl} class="text-verde hover:underline font-medium">
+            {calculators[4].relatedLabel}
           </a>
         </p>
       </div>
