@@ -318,7 +318,7 @@ const categoryIcons = {
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 reveal-stagger">
       {categories.map((cat) => (
         <a
-          href={"/blog/?categoria=" + cat}
+          href={`/blog/categoria/${cat}/`}
           class="reveal group relative block p-6 rounded-xl bg-white border border-texto/8 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
         >
           <div class="w-10 h-10 rounded-lg bg-verde/8 flex items-center justify-center mb-4 group-hover:bg-verde group-hover:text-white transition-all duration-300">

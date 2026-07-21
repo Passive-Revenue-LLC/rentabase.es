@@ -1,0 +1,89 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ArticleCard from '../../../components/ArticleCard.astro';
+import {
+  generateCollectionPageJsonLd,
+  generateBreadcrumbJsonLd,
+} from '../../../utils/seo';
+
+export async function getStaticPaths() {
+  return ['inversion', 'ahorro', 'cripto', 'fiscalidad'].map((category) => ({
+    params: { category },
+    props: { category },
+  }));
+}
+
+const categoryLabels: Record<string, { title: string; desc: string }> = {
+  inversion: { title: 'Inversión', desc: 'ETFs, fondos indexados, bolsa y estrategias de inversión' },
+  ahorro: { title: 'Ahorro', desc: 'Presupuestos, fondo de emergencia y economía personal' },
+  cripto: { title: 'Criptomonedas', desc: 'Bitcoin, Ethereum, wallets y fiscalidad cripto' },
+  fiscalidad: { title: 'Fiscalidad', desc: 'IRPF, declaración de la renta y novedades fiscales' },
+};
+
+const { category } = Astro.props;
+const label = categoryLabels[category];
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft && data.category === category))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const pageTitle = `Artículos de ${label.title}`;
+const pageDescription = `${label.desc}. ${posts.length} artículos prácticos sobre ${label.title.toLowerCase()} en España, escritos sin tecnicismos.`;
+
+const collectionJsonLd = generateCollectionPageJsonLd({
+  url: `/blog/categoria/${category}`,
+  name: pageTitle,
+  description: pageDescription,
+  posts: posts.map((p) => ({
+    slug: p.slug,
+    title: p.data.title,
+    description: p.data.description,
+    pubDate: p.data.pubDate,
+    image: p.data.image,
+  })),
+});
+
+const breadcrumbJsonLd = generateBreadcrumbJsonLd([
+  { name: 'Inicio', url: '/' },
+  { name: 'Blog', url: '/blog' },
+  { name: label.title, url: `/blog/categoria/${category}` },
+]);
+---
+
+<BaseLayout
+  seo={{
+    title: pageTitle,
+    description: pageDescription,
+    url: `/blog/categoria/${category}`,
+  }}
+  jsonLd={[collectionJsonLd, breadcrumbJsonLd]}
+>
+  <section class="max-w-6xl mx-auto px-4 py-12 md:py-16">
+    <!-- Breadcrumb -->
+    <nav class="flex items-center gap-2 text-sm text-texto/55 mb-8" aria-label="Migas de pan">
+      <a href="/" class="hover:text-verde transition-colors">Inicio</a>
+      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+      </svg>
+      <a href="/blog/" class="hover:text-verde transition-colors">Blog</a>
+      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+      </svg>
+      <span class="text-texto/60">{label.title}</span>
+    </nav>
+
+    <header class="mb-10">
+      <h1 class="font-display text-4xl md:text-5xl font-bold mb-4">{label.title}</h1>
+      <p class="text-lg text-texto/60 max-w-2xl">{label.desc}.</p>
+    </header>
+
+    <div class="mb-6 flex items-center justify-between">
+      <p class="text-sm text-texto/60">{posts.length} artículos</p>
+      <a href="/blog/" class="text-sm text-verde font-semibold hover:underline underline-offset-4">Ver todo el blog &rarr;</a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {posts.map((post) => <ArticleCard post={post} />)}
+    </div>
+  </section>
+</BaseLayout>
