@@ -82,13 +82,38 @@ const organizationJsonLd = generateOrganizationJsonLd();
     <!-- RSS Feed -->
     <link rel="alternate" type="application/rss+xml" title="RentaBase" href="/rss.xml" />
 
-    <!-- Tipografías -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&display=swap"
-      rel="stylesheet"
-    />
+    <!-- Tipografía autohospedada (antes Google Fonts CDN: una petición externa
+         render-adyacente menos, sin depender de fonts.gstatic.com) -->
+    <style is:global>
+      @font-face {
+        font-family: 'Funnel Display';
+        font-style: normal;
+        font-weight: 400;
+        font-display: swap;
+        src: url('/fonts/FunnelDisplay-Regular.woff2') format('woff2');
+      }
+      @font-face {
+        font-family: 'Funnel Display';
+        font-style: normal;
+        font-weight: 500;
+        font-display: swap;
+        src: url('/fonts/FunnelDisplay-Medium.woff2') format('woff2');
+      }
+      @font-face {
+        font-family: 'Funnel Display';
+        font-style: normal;
+        font-weight: 600;
+        font-display: swap;
+        src: url('/fonts/FunnelDisplay-SemiBold.woff2') format('woff2');
+      }
+      @font-face {
+        font-family: 'Funnel Display';
+        font-style: normal;
+        font-weight: 700;
+        font-display: swap;
+        src: url('/fonts/FunnelDisplay-Bold.woff2') format('woff2');
+      }
+    </style>
 
     <!-- Google Consent Mode v2: denegado por defecto hasta que el usuario decida.
          Debe ejecutarse antes que la CMP, gtag.js y AdSense. -->
