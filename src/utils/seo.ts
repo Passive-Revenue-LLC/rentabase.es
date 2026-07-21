@@ -36,6 +36,8 @@ const SITE_URL = 'https://www.rentabase.es';
 const DEFAULT_IMAGE = '/og-default.png';
 const LOGO_IMAGE = '/og-default.png';
 const SITE_NAME = 'RentaBase';
+/** Autor real detrás del contenido (E-E-A-T): persona, no solo la marca */
+const AUTHOR_NAME = 'Alex';
 const SITE_DESCRIPTION =
   'Blog sobre inversión, ahorro, criptomonedas y fiscalidad en España';
 const TWITTER_HANDLE = '@RentaBase';
@@ -111,9 +113,9 @@ export function generateArticleJsonLd({
     dateModified: modifiedDate ?? publishedDate,
     inLanguage: 'es-ES',
     author: {
-      '@type': 'Organization',
-      name: SITE_NAME,
-      url: SITE_URL,
+      '@type': 'Person',
+      name: AUTHOR_NAME,
+      url: `${SITE_URL}/sobre-nosotros`,
     },
     publisher: {
       '@type': 'Organization',
@@ -157,9 +159,9 @@ export function generateNewsArticleJsonLd({
     dateModified: modifiedDate ?? publishedDate,
     inLanguage: 'es-ES',
     author: {
-      '@type': 'Organization',
-      name: SITE_NAME,
-      url: SITE_URL,
+      '@type': 'Person',
+      name: AUTHOR_NAME,
+      url: `${SITE_URL}/sobre-nosotros`,
     },
     publisher: {
       '@type': 'Organization',
