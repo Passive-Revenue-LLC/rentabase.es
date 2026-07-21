@@ -303,6 +303,54 @@ export function generateAboutPageJsonLd({
   };
 }
 
+/**
+ * Extrae pares pregunta/respuesta de un artículo a partir de sus encabezados
+ * H2 en formato pregunta ("## ¿...?"). El contenido hasta el siguiente H2
+ * (incluidos sus H3) se usa como respuesta, limpiando la sintaxis Markdown.
+ */
+export function extractFaqPairs(markdown: string): { question: string; answer: string }[] {
+  const sections = markdown.split(/\n(?=## )/);
+  const pairs: { question: string; answer: string }[] = [];
+
+  for (const section of sections) {
+    const headingMatch = section.match(/^## (.+)/);
+    if (!headingMatch) continue;
+    const question = headingMatch[1].trim();
+    if (!question.endsWith('?')) continue;
+
+    const answer = section
+      .slice(headingMatch[0].length)
+      .replace(/^#{1,6}\s+/gm, '')
+      .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+      .replace(/[*_`>]/g, '')
+      .replace(/\n{2,}/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+
+    if (answer.length > 40) {
+      pairs.push({ question, answer });
+    }
+  }
+
+  return pairs;
+}
+
+/** Genera JSON-LD FAQPage a partir de los pares pregunta/respuesta de un artículo */
+export function generateFAQPageJsonLd(pairs: { question: string; answer: string }[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: pairs.map((pair) => ({
+      '@type': 'Question',
+      name: pair.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: pair.answer,
+      },
+    })),
+  };
+}
+
 /** Genera JSON-LD WebApplication para /calculadoras/. Cada calculadora se
  *  describe como una featured part. */
 export function generateCalculatorsJsonLd({

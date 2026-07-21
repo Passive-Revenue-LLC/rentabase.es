@@ -9,7 +9,12 @@ import NewsletterCTA from '../components/NewsletterCTA.astro';
 import RelatedPosts from '../components/RelatedPosts.astro';
 import ShareButtons from '../components/ShareButtons.astro';
 import AuthorBox from '../components/AuthorBox.astro';
-import { generateArticleJsonLd, generateBreadcrumbJsonLd } from '../utils/seo';
+import {
+  generateArticleJsonLd,
+  generateBreadcrumbJsonLd,
+  extractFaqPairs,
+  generateFAQPageJsonLd,
+} from '../utils/seo';
 import type { MarkdownHeading } from 'astro';
 
 interface Props {
@@ -38,6 +43,12 @@ const breadcrumbJsonLd = generateBreadcrumbJsonLd([
   { name: title, url: `/blog/${post.slug}` },
 ]);
 
+/** Solo se genera FAQPage si hay al menos 2 preguntas reales en H2 */
+const faqPairs = extractFaqPairs(post.body);
+const faqJsonLd = faqPairs.length >= 2 ? generateFAQPageJsonLd(faqPairs) : null;
+
+const pageJsonLd = [articleJsonLd, breadcrumbJsonLd, ...(faqJsonLd ? [faqJsonLd] : [])];
+
 /** Calcula el tiempo de lectura estimado */
 const words = post.body.split(/\s+/).length;
 const readingTime = Math.max(1, Math.ceil(words / 200));
@@ -51,7 +62,7 @@ const formattedDate = pubDate.toLocaleDateString('es-ES', {
 
 <BaseLayout
   seo={{ title, description, image: ogImage, url: `/blog/${post.slug}`, type: 'article', publishedDate: pubDate.toISOString() }}
-  jsonLd={[articleJsonLd, breadcrumbJsonLd]}
+  jsonLd={pageJsonLd}
 >
   <ReadingProgress />
 
