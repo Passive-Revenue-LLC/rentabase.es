@@ -1,0 +1,63 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+
+const featuredSlugs = [
+  'como-empezar-a-invertir-desde-cero',
+  'guia-fiscal-inversor-principiante-espana',
+  'fondo-de-emergencia-cuanto-necesitas',
+];
+
+const allPosts = await getCollection('blog', ({ data }) => !data.draft);
+const featured = featuredSlugs
+  .map((slug) => allPosts.find((p) => p.slug === slug))
+  .filter((p): p is NonNullable<typeof p> => Boolean(p));
+---
+
+<BaseLayout
+  seo={{
+    title: 'Página no encontrada',
+    description: 'La página que buscas no existe o se ha movido. Vuelve al inicio o explora el blog de RentaBase.',
+    url: '/404',
+  }}
+  noindex
+>
+  <section class="max-w-3xl mx-auto px-4 pt-16 md:pt-24 pb-16 text-center">
+    <p class="font-display text-7xl md:text-8xl font-bold text-verde/15 mb-2">404</p>
+    <h1 class="font-display text-3xl md:text-4xl font-bold mb-4">Esta página no existe</h1>
+    <p class="text-lg text-texto/60 max-w-xl mx-auto mb-8">
+      El enlace puede estar roto o la página se ha movido. Prueba a volver al inicio o echa un
+      vistazo a estos artículos mientras tanto.
+    </p>
+    <div class="flex flex-wrap justify-center gap-3">
+      <a
+        href="/"
+        class="inline-flex items-center gap-2 px-5 py-3 bg-verde text-white font-semibold rounded-xl hover:bg-verde/90 transition-all hover:shadow-lg hover:shadow-verde/20 hover:-translate-y-0.5"
+      >
+        Volver al inicio
+      </a>
+      <a
+        href="/blog/"
+        class="inline-flex items-center gap-2 px-5 py-3 border border-texto/15 text-texto/75 font-medium rounded-xl hover:border-verde/30 hover:text-verde transition-all"
+      >
+        Ver todo el blog
+      </a>
+      <a
+        href="/calculadoras/"
+        class="inline-flex items-center gap-2 px-5 py-3 border border-texto/15 text-texto/75 font-medium rounded-xl hover:border-verde/30 hover:text-verde transition-all"
+      >
+        Calculadoras
+      </a>
+    </div>
+  </section>
+
+  {featured.length > 0 && (
+    <section class="max-w-6xl mx-auto px-4 pb-20">
+      <h2 class="font-display text-xl font-bold mb-6 text-center">Artículos para empezar</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {featured.map((post) => <ArticleCard post={post} />)}
+      </div>
+    </section>
+  )}
+</BaseLayout>

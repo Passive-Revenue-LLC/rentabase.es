@@ -14,9 +14,11 @@ interface Props {
   seo: SEOProps;
   /** JSON-LD adicional para la página */
   jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+  /** Excluye la página de la indexación (ej. 404) sin bloquear el rastreo de sus enlaces */
+  noindex?: boolean;
 }
 
-const { seo, jsonLd } = Astro.props;
+const { seo, jsonLd, noindex = false } = Astro.props;
 const jsonLdItems = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 const meta = generateSEO(seo);
 const websiteJsonLd = generateWebsiteJsonLd();
@@ -36,7 +38,9 @@ const organizationJsonLd = generateOrganizationJsonLd();
     <link rel="canonical" href={meta.canonical} />
     <meta
       name="robots"
-      content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+      content={noindex
+        ? 'noindex, follow'
+        : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'}
     />
 
     <!-- hreflang -->
