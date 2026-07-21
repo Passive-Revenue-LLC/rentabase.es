@@ -20,10 +20,13 @@ interface Props {
 const { post, headings } = Astro.props;
 const { title, description, pubDate, updatedDate, category, tags, image } = post.data;
 
+/** Portada OG generada por artículo (src/pages/og/[slug].png.ts) si no hay imagen propia */
+const ogImage = image ?? `/og/${post.slug}.png`;
+
 const articleJsonLd = generateArticleJsonLd({
   title,
   description,
-  image,
+  image: ogImage,
   url: `/blog/${post.slug}`,
   publishedDate: pubDate.toISOString(),
   modifiedDate: updatedDate?.toISOString(),
@@ -47,7 +50,7 @@ const formattedDate = pubDate.toLocaleDateString('es-ES', {
 ---
 
 <BaseLayout
-  seo={{ title, description, image, url: `/blog/${post.slug}`, type: 'article', publishedDate: pubDate.toISOString() }}
+  seo={{ title, description, image: ogImage, url: `/blog/${post.slug}`, type: 'article', publishedDate: pubDate.toISOString() }}
   jsonLd={[articleJsonLd, breadcrumbJsonLd]}
 >
   <ReadingProgress />
