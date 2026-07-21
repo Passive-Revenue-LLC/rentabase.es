@@ -2,6 +2,7 @@
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import ScrollToTop from '../components/ScrollToTop.astro';
+import CookieConsent from '../components/CookieConsent.astro';
 import {
   generateSEO,
   generateWebsiteJsonLd,
@@ -115,8 +116,9 @@ const organizationJsonLd = generateOrganizationJsonLd();
       }
     </style>
 
-    <!-- Google Consent Mode v2: denegado por defecto hasta que el usuario decida.
-         Debe ejecutarse antes que la CMP, gtag.js y AdSense. -->
+    <!-- Google Consent Mode v2: denegado por defecto hasta que el usuario decida
+         en el banner (CookieConsent.astro, al final del body). Debe ejecutarse
+         antes que gtag.js y AdSense. -->
     <script is:inline>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
@@ -128,11 +130,6 @@ const organizationJsonLd = generateOrganizationJsonLd();
         'wait_for_update': 500
       });
     </script>
-
-    <!-- TODO(CMP): pegar aquí el script de CookieYes en cuanto exista la cuenta.
-         Debe ir antes de gtag.js y de AdSense para poder actualizar el consentimiento
-         (gtag('consent', 'update', ...)) antes de que esos tags carguen recursos.
-         <script id="cookieyes" type="text/javascript" src="https://cdn-cookieyes.com/client_data/TU_ID/script.js"></script> -->
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-H6C37NP4RL"></script>
@@ -151,6 +148,7 @@ const organizationJsonLd = generateOrganizationJsonLd();
     </main>
     <Footer />
     <ScrollToTop />
+    <CookieConsent />
 
     <!-- Animaciones de entrada al hacer scroll (IntersectionObserver) -->
     <style>
