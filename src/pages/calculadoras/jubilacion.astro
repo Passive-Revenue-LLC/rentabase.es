@@ -1,0 +1,11 @@
+---
+import CalculatorPage from '../../layouts/CalculatorPage.astro';
+import Jubilacion from '../../components/calculadoras/Jubilacion';
+import { calculadoras } from '../../data/calculadoras';
+
+const calculadora = calculadoras.find((c) => c.id === 'jubilacion')!;
+---
+
+<CalculatorPage calculadora={calculadora}>
+  <Jubilacion client:visible />
+</CalculatorPage>

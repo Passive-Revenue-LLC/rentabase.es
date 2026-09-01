@@ -1,0 +1,11 @@
+---
+import CalculatorPage from '../../layouts/CalculatorPage.astro';
+import NominaNeta from '../../components/calculadoras/NominaNeta';
+import { calculadoras } from '../../data/calculadoras';
+
+const calculadora = calculadoras.find((c) => c.id === 'nomina-neta')!;
+---
+
+<CalculatorPage calculadora={calculadora}>
+  <NominaNeta client:visible />
+</CalculatorPage>
