@@ -10,6 +10,8 @@ export interface Calculadora {
   relatedLabel: string;
   /** Path SVG (viewBox 24x24) para el icono de la tarjeta */
   icon: string;
+  /** Fecha de la última actualización de la calculadora (ISO, YYYY-MM-DD) */
+  updatedDate: string;
 }
 
 export const calculadoras: Calculadora[] = [
@@ -21,6 +23,7 @@ export const calculadoras: Calculadora[] = [
     relatedUrl: '/blog/como-empezar-a-invertir-desde-cero/',
     relatedLabel: 'Cómo empezar a invertir desde cero',
     icon: 'M13 7h8m0 0v8m0-8l-8 8-4-4-6 6',
+    updatedDate: '2026-09-01',
   },
   {
     id: 'fondo-emergencia',
@@ -30,6 +33,7 @@ export const calculadoras: Calculadora[] = [
     relatedUrl: '/blog/fondo-de-emergencia-cuanto-necesitas/',
     relatedLabel: 'Fondo de emergencia: cuánto necesitas realmente',
     icon: 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z',
+    updatedDate: '2026-09-01',
   },
   {
     id: 'irpf',
@@ -39,6 +43,7 @@ export const calculadoras: Calculadora[] = [
     relatedUrl: '/blog/como-declarar-etfs-renta-espana/',
     relatedLabel: 'Cómo declarar ETFs en la renta',
     icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z',
+    updatedDate: '2026-09-01',
   },
   {
     id: 'hipoteca-vs-alquiler',
@@ -48,6 +53,7 @@ export const calculadoras: Calculadora[] = [
     relatedUrl: '/blog/ahorrar-entrada-piso-espana/',
     relatedLabel: 'Cómo ahorrar la entrada de un piso en España',
     icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6',
+    updatedDate: '2026-09-01',
   },
   {
     id: 'fondo-vs-etf',
@@ -57,5 +63,6 @@ export const calculadoras: Calculadora[] = [
     relatedUrl: '/blog/fondos-indexados-vs-etfs-diferencias/',
     relatedLabel: 'Diferencias entre fondos indexados y ETFs',
     icon: 'M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3',
+    updatedDate: '2026-09-01',
   },
 ];

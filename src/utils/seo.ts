@@ -403,10 +403,12 @@ export function generateCalculatorJsonLd({
   url,
   name,
   description,
+  modifiedDate,
 }: {
   url: string;
   name: string;
   description: string;
+  modifiedDate?: string;
 }) {
   const canonicalURL = ensureTrailingSlash(new URL(url, SITE_URL).href);
   return {
@@ -415,6 +417,7 @@ export function generateCalculatorJsonLd({
     name,
     description,
     url: canonicalURL,
+    ...(modifiedDate ? { dateModified: modifiedDate } : {}),
     inLanguage: 'es-ES',
     applicationCategory: 'FinanceApplication',
     operatingSystem: 'Any',
