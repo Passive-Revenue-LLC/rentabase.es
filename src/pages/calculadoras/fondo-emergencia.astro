@@ -1,0 +1,11 @@
+---
+import CalculatorPage from '../../layouts/CalculatorPage.astro';
+import FondoEmergencia from '../../components/calculadoras/FondoEmergencia';
+import { calculadoras } from '../../data/calculadoras';
+
+const calculadora = calculadoras.find((c) => c.id === 'fondo-emergencia')!;
+---
+
+<CalculatorPage calculadora={calculadora}>
+  <FondoEmergencia client:visible />
+</CalculatorPage>

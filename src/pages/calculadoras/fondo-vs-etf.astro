@@ -1,0 +1,11 @@
+---
+import CalculatorPage from '../../layouts/CalculatorPage.astro';
+import ComparadorFondoETF from '../../components/calculadoras/ComparadorFondoETF';
+import { calculadoras } from '../../data/calculadoras';
+
+const calculadora = calculadoras.find((c) => c.id === 'fondo-vs-etf')!;
+---
+
+<CalculatorPage calculadora={calculadora}>
+  <ComparadorFondoETF client:visible />
+</CalculatorPage>

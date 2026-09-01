@@ -1,0 +1,11 @@
+---
+import CalculatorPage from '../../layouts/CalculatorPage.astro';
+import InteresCompuesto from '../../components/calculadoras/InteresCompuesto';
+import { calculadoras } from '../../data/calculadoras';
+
+const calculadora = calculadoras.find((c) => c.id === 'interes-compuesto')!;
+---
+
+<CalculatorPage calculadora={calculadora}>
+  <InteresCompuesto client:visible />
+</CalculatorPage>

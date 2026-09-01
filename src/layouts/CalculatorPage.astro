@@ -1,0 +1,70 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import { generateCalculatorJsonLd, generateBreadcrumbJsonLd } from '../utils/seo';
+import type { Calculadora } from '../data/calculadoras';
+
+interface Props {
+  calculadora: Calculadora;
+}
+
+const { calculadora } = Astro.props;
+const { id, label, pageTitle, description, relatedUrl, relatedLabel } = calculadora;
+const url = `/calculadoras/${id}`;
+
+const calculatorJsonLd = generateCalculatorJsonLd({ url, name: pageTitle, description });
+const breadcrumbJsonLd = generateBreadcrumbJsonLd([
+  { name: 'Inicio', url: '/' },
+  { name: 'Calculadoras', url: '/calculadoras' },
+  { name: label, url },
+]);
+---
+
+<BaseLayout
+  seo={{ title: pageTitle, description, url }}
+  jsonLd={[calculatorJsonLd, breadcrumbJsonLd]}
+>
+  <div class="max-w-3xl mx-auto px-4 pt-8 md:pt-14 pb-16">
+    <!-- Breadcrumb -->
+    <nav class="flex items-center gap-2 text-sm text-texto/55 mb-8 animate-fade-in" aria-label="Migas de pan">
+      <a href="/" class="hover:text-verde transition-colors">Inicio</a>
+      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+      </svg>
+      <a href="/calculadoras/" class="hover:text-verde transition-colors">Calculadoras</a>
+      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+      </svg>
+      <span class="text-texto/60 truncate">{label}</span>
+    </nav>
+
+    <!-- Cabecera -->
+    <header class="mb-8 animate-fade-up">
+      <h1 class="font-display text-3xl sm:text-4xl font-bold mb-3">{pageTitle}</h1>
+      <p class="text-lg text-texto/60 max-w-2xl">{description}</p>
+    </header>
+
+    <!-- Calculadora -->
+    <div class="bg-white rounded-2xl shadow-sm border border-texto/[0.06] p-6 md:p-8 animate-fade-up">
+      <slot />
+      <p class="mt-6 text-sm text-texto/60">
+        ¿Quieres aprender más?
+        <a href={relatedUrl} class="text-verde hover:underline font-medium">
+          {relatedLabel}
+        </a>
+      </p>
+    </div>
+
+    <!-- Volver -->
+    <p class="mt-8">
+      <a
+        href="/calculadoras/"
+        class="text-sm text-texto/55 hover:text-verde transition-colors inline-flex items-center gap-1.5"
+      >
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        Ver todas las calculadoras
+      </a>
+    </p>
+  </div>
+</BaseLayout>

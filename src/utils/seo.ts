@@ -391,8 +391,43 @@ export function generateCalculatorsJsonLd({
       '@type': 'WebApplication',
       name: c.label,
       description: c.description,
-      url: `${canonicalURL}#${c.id}`,
+      url: ensureTrailingSlash(new URL(`/calculadoras/${c.id}`, SITE_URL).href),
       applicationCategory: 'FinanceApplication',
     })),
+  };
+}
+
+/** Genera JSON-LD WebApplication para la página individual de una calculadora
+ *  (/calculadoras/[id]/). */
+export function generateCalculatorJsonLd({
+  url,
+  name,
+  description,
+}: {
+  url: string;
+  name: string;
+  description: string;
+}) {
+  const canonicalURL = ensureTrailingSlash(new URL(url, SITE_URL).href);
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name,
+    description,
+    url: canonicalURL,
+    inLanguage: 'es-ES',
+    applicationCategory: 'FinanceApplication',
+    operatingSystem: 'Any',
+    isAccessibleForFree: true,
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'EUR',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: SITE_NAME,
+      url: SITE_URL,
+    },
   };
 }

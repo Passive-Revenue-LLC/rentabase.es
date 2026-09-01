@@ -1,0 +1,11 @@
+---
+import CalculatorPage from '../../layouts/CalculatorPage.astro';
+import HipotecaVsAlquiler from '../../components/calculadoras/HipotecaVsAlquiler';
+import { calculadoras } from '../../data/calculadoras';
+
+const calculadora = calculadoras.find((c) => c.id === 'hipoteca-vs-alquiler')!;
+---
+
+<CalculatorPage calculadora={calculadora}>
+  <HipotecaVsAlquiler client:visible />
+</CalculatorPage>

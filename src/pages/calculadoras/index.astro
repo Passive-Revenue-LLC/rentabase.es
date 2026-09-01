@@ -1,0 +1,71 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { calculadoras } from '../../data/calculadoras';
+import { generateCalculatorsJsonLd, generateBreadcrumbJsonLd } from '../../utils/seo';
+
+const calculatorsTitle = 'Calculadoras financieras gratis para España';
+const calculatorsDescription =
+  'Calcula interés compuesto, tu fondo de emergencia, IRPF por tus ETFs, si te sale mejor comprar o alquilar, y compara fondos indexados con ETFs en segundos. Cinco herramientas gratuitas pensadas para inversores en España.';
+
+const calculatorsJsonLd = generateCalculatorsJsonLd({
+  url: '/calculadoras',
+  name: calculatorsTitle,
+  description: calculatorsDescription,
+  calculators: calculadoras.map((c) => ({
+    id: c.id,
+    label: c.label,
+    description: c.description,
+  })),
+});
+const breadcrumbJsonLd = generateBreadcrumbJsonLd([
+  { name: 'Inicio', url: '/' },
+  { name: 'Calculadoras', url: '/calculadoras' },
+]);
+---
+
+<BaseLayout
+  seo={{
+    title: calculatorsTitle,
+    description: calculatorsDescription,
+    url: '/calculadoras',
+  }}
+  jsonLd={[calculatorsJsonLd, breadcrumbJsonLd]}
+>
+  <!-- Hero -->
+  <section class="max-w-4xl mx-auto px-4 pt-12 md:pt-16 pb-6 text-center reveal">
+    <span class="inline-block text-xs font-medium tracking-wider uppercase text-verde bg-verde/8 px-3 py-1 rounded-full mb-4">
+      Herramientas gratuitas
+    </span>
+    <h1 class="font-display text-4xl md:text-5xl font-bold mb-4">
+      Calculadoras financieras
+    </h1>
+    <p class="text-texto/65 text-lg max-w-2xl mx-auto">
+      Cinco herramientas para tomar mejores decisiones con tu dinero. En tiempo real,
+      sin registros y sin guardar tus datos.
+    </p>
+  </section>
+
+  <!-- Tarjetas -->
+  <section class="max-w-6xl mx-auto px-4 pb-20 pt-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 reveal-stagger">
+      {calculadoras.map((c) => (
+        <a
+          href={`/calculadoras/${c.id}/`}
+          class="reveal group relative block p-6 rounded-xl bg-white border border-texto/8 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+        >
+          <div class="w-10 h-10 rounded-lg bg-verde/8 flex items-center justify-center mb-4 group-hover:bg-verde group-hover:text-white transition-all duration-300">
+            <svg class="w-5 h-5 text-verde group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d={c.icon} />
+            </svg>
+          </div>
+          <h2 class="font-display text-lg font-bold mb-1 group-hover:text-verde transition-colors">{c.label}</h2>
+          <p class="text-sm text-texto/55 leading-relaxed">{c.description}</p>
+          <!-- Flecha decorativa -->
+          <svg class="absolute top-6 right-6 w-4 h-4 text-texto/20 group-hover:text-verde group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </a>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

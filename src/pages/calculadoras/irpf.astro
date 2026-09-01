@@ -1,0 +1,11 @@
+---
+import CalculatorPage from '../../layouts/CalculatorPage.astro';
+import CalculadoraIRPF from '../../components/calculadoras/CalculadoraIRPF';
+import { calculadoras } from '../../data/calculadoras';
+
+const calculadora = calculadoras.find((c) => c.id === 'irpf')!;
+---
+
+<CalculatorPage calculadora={calculadora}>
+  <CalculadoraIRPF client:visible />
+</CalculatorPage>
