@@ -1,0 +1,117 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { generateBreadcrumbJsonLd } from '../../utils/seo';
+
+const pageTitle = 'Curso de educación financiera desde cero (en preparación)';
+const pageDescription =
+  'Estoy validando el interés en un futuro curso de educación financiera desde cero para España. Todavía no existe: apúntate a la lista de espera para saberlo antes que nadie.';
+
+const breadcrumbJsonLd = generateBreadcrumbJsonLd([
+  { name: 'Inicio', url: '/' },
+  { name: 'Curso', url: '/curso' },
+]);
+
+const modulos = [
+  'Fundamentos de ahorro: presupuesto, fondo de emergencia y hábitos antes de invertir',
+  'Cómo montar tu primera cartera: diversificación, fondos indexados vs ETFs, elegir bróker',
+  'Fiscalidad básica del inversor en España: IRPF, declaración de la renta, qué declarar y cuándo',
+  'Automatizar tu ahorro e inversión: aportaciones periódicas y evitar errores de comportamiento',
+  'Planificación a largo plazo: jubilación y cuándo tiene sentido pedir ayuda profesional',
+];
+---
+
+<BaseLayout
+  seo={{
+    title: pageTitle,
+    description: pageDescription,
+    url: '/curso',
+  }}
+  jsonLd={[breadcrumbJsonLd]}
+>
+  <section class="max-w-3xl mx-auto px-4 pt-12 md:pt-16 pb-16">
+    <span class="inline-block text-xs font-semibold tracking-widest uppercase text-verde bg-verde/8 px-3 py-1 rounded-full mb-5">
+      Aún no existe
+    </span>
+
+    <h1 class="font-display text-3xl md:text-4xl font-bold leading-[1.15] mb-5">
+      Estoy preparando un curso de educación financiera desde cero
+    </h1>
+
+    <p class="text-lg text-texto/70 leading-relaxed mb-6">
+      La idea es cubrir los fundamentos de ahorro e inversión, cómo montar tu primera
+      cartera y la fiscalidad básica que necesitas conocer en España, pensado para
+      quien parte de cero, no para inversores que ya llevan años en esto. Y para ser
+      honesto: el curso todavía no existe. Esto es una validación de interés antes de
+      ponerme a construirlo, no un lanzamiento con fecha ni un temario cerrado.
+    </p>
+
+    <div class="rounded-2xl bg-white border border-texto/8 shadow-sm p-6 md:p-8 mb-8">
+      <h2 class="font-display text-lg font-bold mb-4">Posibles módulos</h2>
+      <ul class="space-y-3 mb-4">
+        {modulos.map((m) => (
+          <li class="flex items-start gap-2.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-verde shrink-0 mt-2" aria-hidden="true"></span>
+            <span class="text-texto/75 leading-relaxed text-sm">{m}</span>
+          </li>
+        ))}
+      </ul>
+      <p class="text-xs text-texto/50">
+        Esta lista es orientativa. El contenido final se ajustará según el interés y
+        las dudas que recibas quienes os apuntéis.
+      </p>
+    </div>
+
+    <div class="rounded-2xl bg-gradient-to-br from-verde via-verde to-texto/90 text-white p-6 md:p-8">
+      <h2 class="font-display text-xl font-bold mb-2">Avísame cuando esté listo</h2>
+      <p class="text-white/70 text-sm leading-relaxed mb-5">
+        Sin compromiso ni fecha de lanzamiento. Si al final decido no construirlo, te lo
+        diré también.
+      </p>
+
+      <form
+        action="https://buttondown.com/api/emails/embed-subscribe/algorodev"
+        method="post"
+        target="_blank"
+        data-curso-form
+        class="flex flex-col sm:flex-row gap-3"
+      >
+        <input type="hidden" name="tag" value="curso-interes" />
+        <input
+          type="email"
+          name="email"
+          placeholder="tu@email.com"
+          required
+          class="flex-1 px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:border-acento focus:ring-1 focus:ring-acento transition-colors"
+          aria-label="Dirección de email"
+        />
+        <button
+          type="submit"
+          class="px-6 py-3 bg-acento text-texto font-semibold rounded-lg hover:bg-acento/90 transition-all hover:shadow-lg hover:shadow-acento/25 shrink-0"
+        >
+          Avísame cuando esté listo
+        </button>
+      </form>
+
+      <p data-curso-confirm hidden class="text-white/85 text-sm mt-1">
+        Apuntado. Revisa la pestaña que se ha abierto para confirmar tu email.
+      </p>
+
+      <p class="text-xs text-white/40 mt-3">Sin spam. Cancela cuando quieras.</p>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  // Mismo patrón que NewsletterCTA: el endpoint embed de Buttondown exige
+  // Turnstile y bloquea fetch(), así que el formulario se envía a una pestaña
+  // nueva y el evento se dispara cuando la validación HTML5 del navegador pasa.
+  document.querySelectorAll<HTMLFormElement>('form[data-curso-form]').forEach((form) => {
+    form.addEventListener('submit', () => {
+      if (form.checkValidity()) {
+        window.gtag?.('event', 'course_waitlist_signup', { method: 'website_form' });
+        form.hidden = true;
+        form.parentElement?.querySelector('[data-curso-confirm]')?.removeAttribute('hidden');
+      }
+    });
+  });
+</script>
